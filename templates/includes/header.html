@@ -1,0 +1,76 @@
+{% load staticfiles %}
+<header class="admin-header">
+  <div class="top-part">
+    <div class="container-fluid"> <a href="#" class="navbar-brand">{{ user.company.full_name }}</a>
+      <div class="admin-info clearfix">
+        <div class="dropdown">
+          <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="btn"> <span class="admin-thumb imageFit"><img src="{% static 'images/admin-thumb-01.jpg' %}" alt=""></span> <span class="btn-down"><i class="fa fa-angle-down" aria-hidden="true"></i></span> </button>
+          <ul class="dropdown-menu">
+            <li><a href="javascript:void(0);" onclick="window.location='/logout/'">Logout</a></li>
+          </ul>
+        </div>
+        <div class="admin-name">Hi, <span>{{ user.first_name }}</span></div>
+      </div>
+    </div>
+  </div>
+  <!--/.top-part-->
+
+</header>
+
+<!-- {% for k, v in test.items %}
+    {{k}} = {% for aa in v %}
+        {{aa.process_id}}
+        {% endfor %}
+
+		{% for v1 in v %}
+            {{v1.dashboardId}}
+		{% endfor %}
+
+{% endfor %} -->
+
+<div class="left-panel">
+  <div class="close-leftmenu"></div>
+  <div class="nav-tools">
+    <ul>
+      <li><a href="javascript:void(0);" title="Home" data-toggle="tooltip" data-placement="top"><i class="fa fa-home"></i></a></li>
+      <li><a href="javascript:void(0);" title="Notifications" data-toggle="tooltip" data-placement="top"><i class="fa fa-bell"></i> <span class="noti">20</span></a></li>
+      <li><a href="javascript:void(0);" title="Toggle Left Menu" data-toggle="tooltip" data-placement="top" class="nav-toggle"><i class="fa fa-bars"></i></a></li>
+      <li><a href="javascript:void(0);" title="Refresh" data-toggle="tooltip" data-placement="top"><i class="fa fa-refresh"></i></a></li>
+    </ul>
+  </div>
+  <div class="left-menu">
+    <ul id="accordion">
+      {% for key, values in leftPanel.items %}
+      <li class="panel"> <a data-toggle="collapse" data-parent="#accordion" href="javascript:void(0);" data-target="#MenuOne_{{ forloop.counter }}" class="toggle-nav">
+      <span class="menu-icon"><img src="http://115.248.73.172:8000/static/images/menu-icon-01.png" alt=""></span> <span>{{key}}</span></a>
+        <div id="MenuOne_{{ forloop.counter }}" class="collapse sub-collapse">
+          <div class="menu-sub-left">
+            <ul class="sub-left">
+              {% for v in values %}
+              {% with v.dashboardName.lower as link %}
+              <li><a href="/#/{{key.lower}}/{{link.split|join:"-"}}/" vid="{{v.dashboardId}}"><i class="fa fa-clock-o"></i>{{v.dashboardName}}</a></li>
+              {% endwith %}
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<script type="text/javascript">
+$(function(){
+  len=$('ul.sub-left li').length;
+  if(len=='1'){
+    $('ul.sub-left li:first a').trigger('click');
+  }
+});
+</script>
+
+{% if not leftPanel %}
+<div class="no-record">
+  <div class="err-txt"><i class="fa fa-meh-o"></i><span>OOPS!</span>No record found...</div>
+</div>
+{% endif %}

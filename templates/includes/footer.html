@@ -1,0 +1,44 @@
+{% load staticfiles %}
+
+<footer class="admin-footer">
+	<div class="container-fluid">
+    	<div class="footer-logo">audvantage</div>
+        <div class="footer-links">
+        	<ul class="clearfix">
+            	<li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+            </ul>
+        </div>
+        <div class="copyright">2016 &copy; Audvantage LLC- All Rights Reserved</div>
+    </div>
+</footer>
+
+
+<!-- CloudFlare CDN mousewheel plugin with fallback to local -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.6/jquery.mousewheel.min.js"></script>
+
+<!-- Bootstrap JS CDN -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo= sha512-2e8qq0ETcfWRI4HJBzQiA3UoyFk6tbNyG+qSaIBZLyW9Xf3sWZHN/lxe9fTh1U45DpPf07yj94KsUHHWe4Yk1A==" crossorigin="anonymous"></script>
+
+<!-- Bootstrap CSS local fallback -->
+<script>
+$(document).ready(function() {
+	var bodyColor = $('body').css('color');
+	if(bodyColor != 'rgb(51, 51, 51)') {
+		$('head').prepend('<link rel="stylesheet" href="{% static "bootstrap/css/bootstrap.min.css" %}">');
+	}
+});
+</script>
+
+<script src="{% static 'js/imgLiquid-min.js' %}"></script>
+<script src="{% static 'js/jquery.clearsearch-1.0.4.js' %}"></script>
+<script src="{% static 'js/jquery.sumoselect.min.js' %}"></script>
+<script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.js"></script>
+<script src="{% static 'js/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/heatmap.js"></script>
+<script src="https://code.highcharts.com/modules/treemap.js"></script>
+
+<script src="{% static 'js/init.js' %}"></script>
+<script src="{% static 'js/charts.js' %}"></script>

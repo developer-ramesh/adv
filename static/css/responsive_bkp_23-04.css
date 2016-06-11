@@ -1,0 +1,15 @@
+@charset "utf-8";
+/* CSS Document */
+
+@media only screen and (max-width:1400px){
+	.admin-header .page-title h1{
+		font-size:20px;
+	}
+	.admin-header .doc-toolbar-cont .doc-toolbar{
+		font-size:20px;
+		padding-left:20px;
+	}
+	.admin-header .doc-toolbar-cont .doc-date{
+		padding:0 10px;
+	}
+}

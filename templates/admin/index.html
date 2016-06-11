@@ -1,0 +1,16 @@
+{% extends "admin/layout.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block head %}Dashboard{% endblock %}
+{% block content %}
+{% load staticfiles %}
+
+<div class="body-content">
+
+    {% include 'includes/header.html' %}
+    <div ng-view=""></div>
+    {% include 'includes/footer.html' %}
+
+</div>
+
+
+{% endblock %}

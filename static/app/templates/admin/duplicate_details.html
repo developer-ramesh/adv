@@ -1,0 +1,102 @@
+<div class="main-container">
+  <!--Loader-->
+  <div ng-if="loading" class="body-loader"></div>
+  <!--// Loader-->
+
+  <div class="table-wrap text-center">
+    <input class="form-control" ng-model="searchText" placeholder="Search" type="Type for search" /> <span class="input-group-addon">
+      <span class="glyphicon glyphicon-search"></span>
+
+      		<table id="my-table" class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th><a href="javascript:void(0);" ng-click="sortType = 'e_employee_number'; sortReverse = !sortReverse">
+                    Employee Number
+                    <span ng-show="sortType == 'e_employee_number' && !sortReverse" class="fa fa-caret-down"></span>
+                    <span ng-show="sortType == 'e_employee_number' && sortReverse" class="fa fa-caret-up"></span></a>
+                  </th>
+                  <th><a href="javascript:void(0);" ng-click="sortType = 'report_owner_id'; sortReverse = !sortReverse">
+                    Employee Email
+                    <span ng-show="sortType == 'report_owner_id' && !sortReverse" class="fa fa-caret-down"></span>
+                    <span ng-show="sortType == 'report_owner_id' && sortReverse" class="fa fa-caret-up"></span></a>
+                  </th>
+                  <th><a href="javascript:void(0);" ng-click="sortType = 'e_employee_name'; sortReverse = !sortReverse">
+                    Employee Name
+                    <span ng-show="sortType == 'e_employee_name' && !sortReverse" class="fa fa-caret-down"></span>
+                    <span ng-show="sortType == 'e_employee_name' && sortReverse" class="fa fa-caret-up"></span></a>
+                  </th>
+                  <th><a href="javascript:void(0);" ng-click="sortType = 'e_department_name'; sortReverse = !sortReverse">
+                    Department Name
+                    <span ng-show="sortType == 'e_department_name' && !sortReverse" class="fa fa-caret-down"></span>
+                    <span ng-show="sortType == 'e_department_name' && sortReverse" class="fa fa-caret-up"></span></a>
+                  </th>
+                  <th>Function</th>
+                  <th>Country</th>
+                  <th>Manager Name</th>
+                  <th>Report ID</th>
+                  <th>Report Line ID</th>
+                  <th>Expense Type Name</th>
+                  <th>Spend Category Name</th>
+                  <th>Payment Type Name</th>
+                  <th>Transacaon Currency Code</th>
+                  <th>Transacaon Amount</th>
+                  <th>Exchange Rate</th>
+                  <th>Posted Amount</th>
+                  <th>Approved Amount</th>
+                  <th>Vendor Descripaon</th>
+                  <th>Location Name</th>
+                  <th>Descripaon</th>
+                  <th>Is Personal Card Charge</th>
+                  <th>Receipt Received</th>
+                  <th>Trip ID</th>
+                  <th>Has Aqendees</th>
+                  <th>Has Comments</th>
+                  <th>Has Excepaons</th>
+                  <th># Duplicates</th>
+                  <th>Total Duplicate Amount</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <tr ng-repeat="duplicate in duplicate_data | orderBy:sortType:sortReverse | filter:searchText">
+                  <td>{{duplicate.e_employee_number}}</td>
+                  <td>{{duplicate.report_owner_id}}</td>
+                  <td>{{duplicate.e_employee_name}}</td>
+                  <td>{{duplicate.e_department_name}}</td>
+                  <td>{{duplicate.e_function_name}}</td>
+                  <td>{{duplicate.location_country}}</td>
+                  <td>{{duplicate.e_manager_name}}</td>
+                  <td>{{duplicate.report_id}}</td>
+                  <td>{{duplicate.report_line_id}}</td>
+                  <td>{{duplicate.expense_type_name}}</td>
+                  <td>{{duplicate.spend_category_name}}</td>
+                  <td>{{duplicate.payment_type_name}}</td>
+                  <td>{{duplicate.transaction_currency_code}}</td>
+                  <td>{{duplicate.transaction_amount|currency}}</td>
+                  <td>{{duplicate.exchange_rate}}</td>
+                  <td>{{duplicate.posted_amount|currency}}</td>
+                  <td>{{duplicate.approved_amount|currency}}</td>
+                  <td>{{duplicate.vendor_description}}</td>
+                  <td>{{duplicate.location_name}}</td>
+                  <td>{{duplicate.description}}</td>
+                  <td>{{duplicate.is_personal_card_charge}}</td>
+                  <td>{{duplicate.receipt_received}}</td>
+                  <td>{{duplicate.trip_id}}</td>
+                  <td>{{duplicate.has_attendees}}</td>
+                  <td>{{duplicate.has_comments}}</td>
+                  <td>{{duplicate.has_exceptions}}</td>
+                  <td>{{duplicate.c_number_of_duplicates}}</td>
+                  <td>{{duplicate.c_total_duplicate_amount|currency}}</td>
+                </tr>
+
+          		</tbody>
+            </table>
+
+
+      </div>
+
+
+
+
+</div>

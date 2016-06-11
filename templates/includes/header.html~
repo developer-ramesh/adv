@@ -1,0 +1,5 @@
+<div class="header">Administrator Area </div>
+
+<a href="#/"> Home</a> | <a href="#/about"> About</a> | <a href="#/contact"> Contact</a>
+
+{{emp_name}}
