@@ -1,0 +1,155 @@
+<div class="main-container">
+  <!--Loader-->
+  <div ng-if="loading" class="body-loader"></div>
+  <!--// Loader-->
+
+	<div class="header-bottom">
+        <div class="bottom-part clearfix">
+            <div class="nav-toggle"></div>
+            <div class="page-title">
+                <h1>View Message</h1>
+            </div>
+         </div>
+    </div>
+    <!--/.header-bottom-->
+
+  <div class="alert alert-success" role="alert" ng-if="status=='success'">{{message}}</div>
+
+	<div class="white-panel">
+  	<div class="panel-heading-btns">
+    	<a ng-if="add_company_message!=''" class="btn btn-success" ng-click="_add_company_message()" data-toggle="modal" data-target="#AddEdit">Add Message</a>
+      <a ng-if="add_system_message!=''" class="btn btn-success" ng-click="_add_system_message()" data-toggle="modal" data-target="#AddEdit">Add System Message</a>
+
+      <a ng-if="deactivate_message!=''" href="javascript:void(0);" ng-click="make_status()" class="btn btn-success">
+        <span class="roll-msg">Deactivate Message</span>
+        <img class="ld" style="display:none;" src="/static/images/btn-loader.gif" alt=""/>
+      </a>
+
+      <input type="hidden" name="message_id" class="message_id"/>
+      <input type="hidden" name="message_type" class="message_type"/>
+    </div>
+
+  	<div class="panel-body">
+    	<div class="table-wrap text-center">
+        	<table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th class="text-center">&nbsp;</th>
+                  <th class="text-center">Company Name</th>
+                  <th class="text-center">Message Type</th>
+                  <th class="text-center">Message Text</th>
+                  <th class="text-center">Last Updated By</th>
+                  <th class="text-center">Last Updated Date</th>
+                  <th class="text-center">Active</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr ng-repeat="dat in messageData">
+                  <td>
+                  	<div class="custom-radio label-only">
+                        <input type="radio" value="{{dat[0][0]}}" class="role-u" name="role" id="role1_{{dat[0][0]}}">
+                        <label for="role1_{{dat[0][0]}}">&nbsp;</label>
+                    </div>
+                  </td>
+
+                  <td ng-if="dat[0][3]=='C'">
+                  	<a>{{dat[0][2]}}</a>
+                  </td>
+                  <td ng-if="dat[0][3]=='S'">
+                    <a>System</a>
+                  </td>
+
+                  <td ng-if="dat[0][3]=='C'" >Company</td>
+                  <td ng-if="dat[0][3]=='S'" >System</td>
+
+                  <td><a ng-if="update_company_message!=''" ng-click="editMessage(dat[0][0]);" data-toggle="modal" data-target="#AddEdit" style="cursor:pointer" style="cursor:pointer">{{dat[0][4]}}</a></td>
+
+                  <td class="updated_by">{{dat[0][6]}}</td>
+                  <td class="updated_date">{{dat[0][7].$date | date:'M/d/yyyy h:mm a'}}</td>
+                  <td ng-if="dat[0][5]=='Y'" class="active_stat">Yes</td>
+                  <td ng-if="dat[0][5]=='N'" class="active_stat">No</td>
+                </tr>
+
+              </tbody>
+            </table>
+
+        </div>
+    </div>
+  </div>
+
+
+  <!-- Start Message Add/Edit Modal -->
+  <div class="modal fade log-modal" id="AddEdit" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form name="messageForm" class="frm form-horizontal" ng-submit="messageFormData()" autocomplete="off" enctype="multipart/form-data" novalidate>
+      <div class="modal-header">
+        <button type="button" ng-click="close();" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{popup_text}}</h4>
+        <div class="alert alert-success" role="alert" ng-if="status_role=='success'">{{message_role}}</div>
+        <div class="alert alert-danger" role="alert" ng-if="status_role=='danger'">{{message_role}}</div>
+      </div>
+
+      <p ng-if="cmp.edit_dat.length==0" style="text-align:center;margin-top:10px;"><img class="loader" src="/static/images/loader.gif" alt=""/> &nbsp;&nbsp;Please wait...</p>
+
+      <div ng-if="cmp.edit_dat.length!=0" class="modal-body">
+
+        <div class="form-horizontal">
+            <div ng-if="(popup_text!='Edit Message') && (popup_text!='Add System Message')" class="form-group">
+              <label class="control-label col-lg-2">Company Name</label>
+                <div class="col-lg-4">
+                  <select name="company_name" class="form-control company_name chk">
+                      <option ng-repeat="comp in compData" value="{{comp.id}}" ng-selected="{{comp.id == UserCompId}}">{{comp.short_name}}</option>
+                  </select>
+                </div>
+                <label class="control-label col-lg-1">Active</label>
+                <div class="col-lg-1">
+                  <div class="switch">
+                      <input ng-if="cmp.edit_dat.fields.active_flag=='Y'" checked="checked" name="active_flag" value="Y" id="toggle-active-3" class="cmn-toggle cmn-toggle-round active_flag" type="checkbox">
+                      <input ng-if="cmp.edit_dat.fields.active_flag=='N'" name="active_flag" value="Y" id="toggle-active-3" class="cmn-toggle cmn-toggle-round active_flag" type="checkbox">
+                      <input ng-if="(popup_text=='Add Message') || (popup_text=='Add System Message')" name="active_flag" value="Y" id="toggle-active-3" class="cmn-toggle cmn-toggle-round active_flag" type="checkbox">
+
+                      <label for="toggle-active-3"></label>
+                  </div>
+                </div>
+            </div>
+            <div class="form-group">
+            	<label class="control-label col-lg-2">Message	Text</label>
+              <div class="col-lg-9">
+                  <textarea class="form-control message_text chk" name="message_text" ng-model="cmp.message_text" ng-minlength="5" rows="5" required ></textarea>
+                  <span ng-show="messageForm.message_text.$touched && messageForm.message_text.$invalid && !messageForm.message_text.$error.minlength" style="color:#FF001F">This field is required.</span>
+                  <span ng-show="messageForm.message_text.$error.minlength" style="color:#FF001F">Min length must be 5 character</span>
+              </div>
+            </div>
+
+            <div class="form-group" ng-if="(popup_text!='Add Message') && (popup_text!='Add System Message')">
+              <label class="control-label col-lg-2">Last Updated By</label>
+                <div class="col-lg-3">
+                  <input type="text" value="{{cmp.edit_dat.fields.last_updated_by}}" readonly class="form-control">
+                </div>
+                <label class="control-label col-lg-2">Last Updated Date</label>
+                <div class="col-lg-3">
+                  <input type="text" value="{{cmp.edit_dat.fields.last_updated_date|date:'M/d/yyyy h:mm a'}}" readonly class="form-control">
+                </div>
+            </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <input type="hidden" name="message_id" value="{{cmp.edit_dat.pk}}" class="edit_message_id"/>
+        <button type="button" ng-click="close();" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="messageForm.$invalid"><span class="role_save">Save changes</span>
+          <img class="lder" style="display:none;" src="/static/images/btn-loader.gif" alt=""/>
+        </button>
+      </div>
+      </form>
+    </div>
+  </div>
+  </div>
+<!-- END Message Add/Edit Modal -->
+
+
+
+<script src="/static/js/multiselect.min.js"></script>
+</div>

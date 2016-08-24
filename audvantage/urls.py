@@ -18,12 +18,19 @@ from django.conf.urls import patterns, include, url
 from administrator.views import *
 
 urlpatterns = [
-    url(r'^$', admin_home),
+    url('', include('usermanagement.urls')),
+    url('', include('messagemanagement.urls')),
+    url('', include('companymanagement.urls')),
+    url('', include('dashboardmanagement.urls')),
+    url('', include('processmanagement.urls')),
+    url('', include('managerolepermission.urls')),
+    url('', include('dashboard.urls')),
+    url('', include('datamanagement.urls')),
     url(r'^get-summary-data/$', getSearchSummary),
-    url(r'^get-duplicate-data/$', getSearchDuplicate),
+    url(r'^$', admin_home),
     url(r'^login/$', login),
     url(r'^forgot-username/$', forgotUserName),
     url(r'^forgot-password/$', forgotPassword),
     url(r'^reset-password/(.*)/$', resetPassword),
-     url(r'^logout/$', logout_page),
+    url(r'^logout/$', logout_page),
 ]

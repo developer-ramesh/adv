@@ -9,6 +9,51 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+
+class AvOutExpDashSummary(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    job_id = models.BigIntegerField()
+    company_id = models.BigIntegerField()
+    process_id = models.BigIntegerField()
+    dashboard_id = models.BigIntegerField()
+    report_id = models.CharField(max_length=200)
+    report_line_id = models.CharField(max_length=200)
+    report_owner_id = models.CharField(max_length=200)
+    expense_type_name = models.CharField(max_length=240)
+    location_country = models.CharField(max_length=240)
+    spend_category_name = models.CharField(max_length=240)
+    e_employee_name = models.CharField(max_length=240)
+    e_function_name = models.CharField(max_length=240)
+    c_fiscal_quarter = models.CharField(max_length=240)
+    transaction_amount = models.BigIntegerField()
+    report_line_id = models.CharField(max_length=240)
+    c_month_name = models.CharField(max_length=240)
+    e_department_name = models.CharField(max_length=240)
+    e_employee_number = models.BigIntegerField()
+    e_manager_employee_number = models.CharField(max_length=240)
+    payment_type_name = models.CharField(max_length=240)
+    transaction_date = models.DateField()
+    transaction_currency_code = models.CharField(max_length=240)
+    exchange_rate = models.BigIntegerField()
+    posted_amount = models.BigIntegerField()
+    approved_amount = models.BigIntegerField()
+    vendor_description = models.CharField(max_length=240)
+    location_name = models.CharField(max_length=240)
+    description = models.CharField(max_length=240)
+    is_personal_card_charge = models.CharField(max_length=240)
+    receipt_received = models.CharField(max_length=240)
+    trip_id = models.CharField(max_length=240)
+    has_attendees = models.CharField(max_length=240)
+    has_comments = models.CharField(max_length=240)
+    has_exceptions = models.CharField(max_length=240)
+    c_amount_bucket = models.CharField(max_length=240)
+    c_month_id = models.CharField(max_length=240)
+
+    class Meta:
+        managed = False
+        db_table = 'av_out_exp_dash_summary'
+
+
 class AvExpJobStatistics(models.Model):
     id = models.BigIntegerField(primary_key=True)
     job_id = models.BigIntegerField()
@@ -66,97 +111,6 @@ class AvOutExpExpensesF(models.Model):
     class Meta:
         managed = False
         db_table = 'av_out_exp_expenses_f'
-
-
-class AvOutExpDashDuplicate(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    job_id = models.BigIntegerField()
-    company_id = models.BigIntegerField()
-    process_id = models.BigIntegerField()
-    dashboard_id = models.BigIntegerField()
-    report_id = models.CharField(max_length=200)
-    report_line_id = models.CharField(max_length=200)
-    report_owner_id = models.CharField(max_length=200)
-    expense_type_name = models.CharField(max_length=240)
-    location_country = models.CharField(max_length=240)
-    spend_category_name = models.CharField(max_length=240)
-    e_employee_name = models.CharField(max_length=240)
-    e_function_name = models.CharField(max_length=240)
-    c_fiscal_quarter = models.CharField(max_length=240)
-    transaction_amount = models.BigIntegerField()
-    report_line_id = models.CharField(max_length=240)
-    c_month_name = models.CharField(max_length=240)
-    e_department_name = models.CharField(max_length=240)
-    e_employee_number = models.BigIntegerField()
-    e_manager_employee_number = models.CharField(max_length=240)
-    e_manager_name = models.CharField(max_length=240)
-    payment_type_name = models.CharField(max_length=240)
-    transaction_date = models.DateField()
-    transaction_currency_code = models.CharField(max_length=240)
-    exchange_rate = models.BigIntegerField()
-    posted_amount = models.BigIntegerField()
-    approved_amount = models.BigIntegerField()
-    vendor_description = models.CharField(max_length=240)
-    location_name = models.CharField(max_length=240)
-    description = models.CharField(max_length=240)
-    is_personal_card_charge = models.CharField(max_length=240)
-    receipt_received = models.CharField(max_length=240)
-    trip_id = models.CharField(max_length=240)
-    has_attendees = models.CharField(max_length=240)
-    has_comments = models.CharField(max_length=240)
-    has_exceptions = models.CharField(max_length=240)
-    c_number_of_duplicates = models.BigIntegerField()
-    c_total_duplicate_amount = models.BigIntegerField()
-    c_amount_bucket = models.CharField(max_length=240)
-    c_month_id = models.CharField(max_length=240)
-    
-    class Meta:
-        managed = False
-        db_table = 'av_out_exp_dash_duplicate'
-
-
-class AvOutExpDashSummary(models.Model):
-    id = models.BigIntegerField(primary_key=True)
-    job_id = models.BigIntegerField()
-    company_id = models.BigIntegerField()
-    process_id = models.BigIntegerField()
-    dashboard_id = models.BigIntegerField()
-    report_id = models.CharField(max_length=200)
-    report_line_id = models.CharField(max_length=200)
-    report_owner_id = models.CharField(max_length=200)
-    expense_type_name = models.CharField(max_length=240)
-    location_country = models.CharField(max_length=240)
-    spend_category_name = models.CharField(max_length=240)
-    e_employee_name = models.CharField(max_length=240)
-    e_function_name = models.CharField(max_length=240)
-    c_fiscal_quarter = models.CharField(max_length=240)
-    transaction_amount = models.BigIntegerField()
-    report_line_id = models.CharField(max_length=240)
-    c_month_name = models.CharField(max_length=240)
-    e_department_name = models.CharField(max_length=240)
-    e_employee_number = models.BigIntegerField()
-    e_manager_employee_number = models.CharField(max_length=240)
-    payment_type_name = models.CharField(max_length=240)
-    transaction_date = models.DateField()
-    transaction_currency_code = models.CharField(max_length=240)
-    exchange_rate = models.BigIntegerField()
-    posted_amount = models.BigIntegerField()
-    approved_amount = models.BigIntegerField()
-    vendor_description = models.CharField(max_length=240)
-    location_name = models.CharField(max_length=240)
-    description = models.CharField(max_length=240)
-    is_personal_card_charge = models.CharField(max_length=240)
-    receipt_received = models.CharField(max_length=240)
-    trip_id = models.CharField(max_length=240)
-    has_attendees = models.CharField(max_length=240)
-    has_comments = models.CharField(max_length=240)
-    has_exceptions = models.CharField(max_length=240)
-    c_amount_bucket = models.CharField(max_length=240)
-    c_month_id = models.CharField(max_length=240)
-
-    class Meta:
-        managed = False
-        db_table = 'av_out_exp_dash_summary'
 
 
 class AvMasterCompany(models.Model):
@@ -345,7 +299,6 @@ class AvMasterUserDashboard(models.Model):
 
 class AvMasterUserDatascope(models.Model):
     process_id = models.BigIntegerField()
-    dashboard_id = models.BigIntegerField()
     company_id = models.BigIntegerField()
     user_id = models.CharField(max_length=30)
     data_scope_type = models.CharField(max_length=100)

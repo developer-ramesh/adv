@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="page-title">
-                <h1>Expenses summary</h1>
+                <h1>Expenses Duplicate</h1>
             </div>
         	<div class="toggle-doc"></div>
             <div class="doc-toolbar-cont clearfix">
@@ -25,24 +25,24 @@
                     <div class="icon-holder" id="BtnDate"><i class="fa fa-calendar"></i></div>
                     <div class="date-holder" id="dateWrap">
                         <div class="calendar-field">
-                            <input type="text" name="start_date" class="form-control" id="StartTime" placeholder="YYYY-MM-DD" />
+                            <input type="text" name="start_date" class="form-control" id="StartTime" placeholder="YYYY-MM-DD" autocomplete="off"/>
                         </div>
                         <div class="calendar-field">
-                            <input type="text" name="end_date" class="form-control" id="EndTime" placeholder="YYYY-MM-DD" />
+                            <input type="text" name="end_date" class="form-control" id="EndTime" placeholder="YYYY-MM-DD" autocomplete="off"/>
                         </div>
-                        <div class="calendar-field">
-                            <!-- <button type="button" ng-click="searchFilter()" class="btn-cal-search"><i class="fa fa-search"></i></button> -->
-                        </div>
+                        <!-- <div class="calendar-field">
+                            <button type="button" ng-click="searchFilter()" class="btn-cal-search"><i class="fa fa-search"></i></button>
+                        </div> -->
                     </div>
                 </div>
                 <div class="doc-toolbar">
                     <ul>
-                        <li><a href="javascript:void(0);" title="View" data-toggle="tooltip" data-placement="top"><i class="fa fa-tripadvisor"></i></a></li>
-                        <li data-placement="top" data-toggle="modal" data-target="#ListView">
-                            <a href="javascript:void(0);" title="Detail Records" data-toggle="tooltip"><i class="fa fa-list-alt"></i></a>
+                        <!-- <li><a href="javascript:void(0);" title="View" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-tripadvisor"></i></a></li> -->
+                        <li data-toggle="modal" data-target="#ListView">
+                            <a href="javascript:void(0);" ng-click="list_record()" title="Detail Records" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-list-alt"></i></a>
                         </li>
-                        <li><a href="javascript:void(0);" title="Download" data-toggle="tooltip" data-placement="top"><i class="fa fa-cloud-download"></i></a></li>
-                        <li><a href="javascript:void(0);" title="Print" data-toggle="tooltip" data-placement="top"><i class="fa fa-print"></i></a></li>
+                        <li ng-if="export_filename"><a href="{{export_filename}}" download title="Download" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-cloud-download"></i></a></li>
+                        <li><a href="javascript:void(0);" title="Print" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-print"></i></a></li>
                   </ul>
                 </div>
             </div>
@@ -57,25 +57,38 @@
                 	<div class="row">
                     	<div class="col-sm-6 col-lg-3">
                         	<label class="control-label">Quarter</label>
-                            <select name="QuarterItem" class="form-control multi-select" multiple>
-                                <option ng-repeat="quarter_item in fiscal_data" value="{{quarter_item.c_fiscal_quarter}}" ng-selected="quarter_item.c_fiscal_quarter">{{quarter_item.c_fiscal_quarter}}</option>
-                            </select>
+                            <div class="custom-select">
+                                <select name="QuarterItem" class="form-control multi-select" multiple>
+                                    <option ng-repeat="quarter_item in fiscal_data" value="{{quarter_item.c_fiscal_quarter}}" ng-selected="quarter_item.c_fiscal_quarter">{{quarter_item.c_fiscal_quarter}}</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="col-sm-6 col-lg-3">
                         	<label class="control-label">spend category</label>
-                          <select name="subCategoryItem" class="form-control multi-select" multiple>
-                              <option ng-repeat="sub_category_item in spend_cat_data" value="{{sub_category_item.spend_category_name}}" ng-selected="sub_category_item.spend_category_name">{{sub_category_item.spend_category_name}}</option>
-                          </select>
+                            <div class="custom-select">
+                                <select name="subCategoryItem" class="form-control multi-select" multiple>
+                                  <option ng-repeat="sub_category_item in spend_cat_data" value="{{sub_category_item.spend_category_name}}" ng-selected="sub_category_item.spend_category_name">{{sub_category_item.spend_category_name}}</option>
+                              </select>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-lg-3">
                         	<label class="control-label">business function</label>
-                          <select name="functionItem" class="form-control multi-select" multiple>
-                              <option ng-repeat="function_item in function_name_data" value="{{function_item.e_function_name}}" ng-selected="function_item.e_function_name">{{function_item.e_function_name}}</option>
-                          </select>
+                            <div class="custom-select">
+                                <select name="functionItem" class="form-control multi-select" multiple>
+                                  <option ng-repeat="function_item in function_name_data" value="{{function_item.e_function_name}}" ng-selected="function_item.e_function_name">{{function_item.e_function_name}}</option>
+                              </select>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-lg-3">
-                        	<label class="control-label">Number of Duplicates</label>
-                            <input type="text" name="duplicateItem" class="form-control">
+                        	<!-- <label class="control-label">Number of Duplicates</label>
+                            <input type="text" name="duplicateItem" class="form-control"> -->
+                            <label class="control-label">view by</label>
+                            <div class="custom-select">
+                                <select name="viewBy" class="viewBy form-control">
+                                    <option value="transaction_amount">Amount</option>
+                                    <option value="report_line_id">Expense Items</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -84,19 +97,23 @@
                 	<div class="row">
                     	<div class="col-sm-6 col-lg-3">
                         	<label class="control-label">country</label>
-                          <select name="countryItem" class="form-control multi-select" multiple>
-                              <option ng-repeat="country_item in country_data" value="{{country_item.location_country}}" ng-selected="country_item.location_country">{{country_item.location_country}}</option>
-                          </select>
+                            <div class="custom-select">
+                                <select name="countryItem" class="form-control multi-select" multiple>
+                                  <option ng-repeat="country_item in country_data" value="{{country_item.location_country}}" ng-selected="country_item.location_country">{{country_item.location_country}}</option>
+                              </select>
+                          </div>
                         </div>
                         <div class="col-sm-6 col-lg-3">
                         	<label class="control-label">Expense Type</label>
-                          <select name="categoryItem" class="form-control multi-select" multiple>
-                              <option ng-repeat="category_item in expense_type_data" value="{{category_item.expense_type_name}}" ng-selected="category_item.expense_type_name">{{category_item.expense_type_name}}</option>
-                          </select>
+                            <div class="custom-select">
+                                <select name="categoryItem" class="form-control multi-select" multiple>
+                                  <option ng-repeat="category_item in expense_type_data" value="{{category_item.expense_type_name}}" ng-selected="category_item.expense_type_name">{{category_item.expense_type_name}}</option>
+                              </select>
+                          </div>
                         </div>
-												<div class="col-sm-6 col-lg-3">
+						<div class="col-sm-6 col-lg-3">
                         	<label class="control-label">employee</label>
-                            <input type="text" name="employeeItem" class="form-control employeeItem">
+                            <input type="text" name="employeeItem" autocomplete="off" class="form-control employeeItem">
                         </div>
                         <div class="col-sm-6 col-lg-3">
                         	<label class="control-label">minimum amount</label>
@@ -107,16 +124,29 @@
                             <input type="text" class="form-control">
                         </div>-->
                     </div>
-
-                    <div class="col-sm-6 col-lg-2">
-                      <label class="control-label">view by</label>
-                      <select name="viewBy" class="viewBy form-control">
-                          <option value="transaction_amount">Amount</option>
-                          <option value="report_line_id">Reports</option>
-                      </select>
-                    </div>
-                    <button style="float:right;margin-top:5px;" type="submit" class="btn btn-primary">Search</button>
                 </div>
+                <div class="form-group text-right">
+                  <input type="hidden" name="dashboardType" value="Duplicate"/>
+                	<button type="submit" class="btn btn-primary">Search</button>
+                </div>
+                <!-- <div class="form-group">
+                	<div class="row">
+                    	<div class="col-sm-6 col-lg-3">
+                          <label class="control-label">view by</label>
+                          <div class="custom-select">
+                              <select name="viewBy" class="viewBy form-control">
+                                  <option value="transaction_amount">Amount</option>
+                                  <option value="report_line_id">Expense Items</option>
+                              </select>
+                          </div>
+                        </div>
+                        <div class="col-sm-6 col-lg-1">
+                          <label class="control-label">&nbsp;</label>
+                          <button type="submit" class="btn btn-primary btn-block">Search</button>
+                        </div>
+                    </div>
+                </div> -->
+
             </div>
         </div>
         <!--/.white-panel-->
@@ -126,7 +156,7 @@
         	<div class="chart-blocks text-center">
             	<ul class="clearfix">
                 	<li class="block-yellow">
-                    	<a href="#" title="Expense Reports">
+                    	<a href="javascript:void(0);" title="Expense Reports">
                             <!--<span class="icon-holder"><img src="images/chart-icon-01.svg" alt=""></span>-->
                             <span class="icon-holder">
                             	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 46 63">
@@ -150,7 +180,7 @@
                     </li>
 
                     <li class="block-green">
-                    	<a href="#" title="Expense Items">
+                    	<a href="javascript:void(0);" title="Expense Items">
                             <span class="icon-holder">
                             	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 57 67">
               									<g>
@@ -172,12 +202,12 @@
               								</svg>
               							</span>
                             <span class="count" val="{{exjobstatics.no_of_exp_lines|number}}">{{exjobstatics.no_of_exp_lines|number}}</span>
-                            <span class="block-heading">expense items</span>
+                            <span class="block-heading"># Expense Items</span>
                         </a>
                     </li>
 
                     <li class="block-blue">
-                    	<a href="#" title="AVG Expense Per Report">
+                    	<a href="javascript:void(0);" title="AVG Expense Per Report">
                             <span class="icon-holder">
                             	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 75 66">
               								<g>
@@ -198,13 +228,13 @@
               									c0.7,0.5,2.1,1.2,4.4,2c2.5,0.9,4.4,1.7,5.8,2.4C21.1,19.8,22.2,20.9,23.1,22.2z"/>
               								</svg>
                             </span>
-                            <span class="count" val="{{exjobstatics.avg_exp_per_report|number}}">{{exjobstatics.avg_exp_per_report|number}}</span>
+                            <span class="count" val="{{exjobstatics.avg_exp_per_report|number}}">${{exjobstatics.avg_exp_per_report|number}}</span>
                             <span class="block-heading">AVG Expense per report</span>
                         </a>
                     </li>
 
                     <li class="block-brown">
-                    	<a href="#" title="Avg Expense Per Employee">
+                    	<a href="javascript:void(0);" title="Avg Expense Per Employee">
                             <span class="icon-holder">
                             	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 74 69">
                 								<g>
@@ -224,12 +254,12 @@
                 									c0.5,0.4,1.5,0.8,3.1,1.3c1.7,0.6,3.1,1.1,4.1,1.7C14.8,29.3,15.6,30,16.2,30.9z"/>
                 								</svg>
                             </span>
-                            <span class="count" val="{{exjobstatics.avg_exp_per_employee|number}}">{{exjobstatics.avg_exp_per_employee|number}}</span>
+                            <span class="count" val="{{exjobstatics.avg_exp_per_employee|number}}">${{exjobstatics.avg_exp_per_employee|number}}</span>
                             <span class="block-heading">Avg Expense Per Employee</span>
                       </a>
                     </li>
                     <li class="block-orange">
-                    	<a href="#" title="Employees">
+                    	<a href="javascript:void(0);" title="Employees">
                             <span class="icon-holder">
                             	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 112 69">
                 								<g>
@@ -259,7 +289,7 @@
                         </a>
                     </li>
                     <li class="block-darkgreen">
-                    	<a href="#" title="Total Amount">
+                    	<a href="javascript:void(0);" title="Total Amount">
                             <span class="icon-holder">
                             	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 54 66">
                 								<g>
@@ -317,9 +347,9 @@
 
                             <div class="bar-graph">
                             	<ul>
-                                <li ng-repeat="buket_data in bucket_data" style="height:{{buket_data.expenses/max_val+$index*8}}px;">
-                                  <span ng-if="viewBy=='transaction_amount' || !viewBy">{{buket_data.expenses | nfcurrency}}</span>
-                                  <span ng-if="viewBy=='report_line_id'">{{buket_data.expenses | number}}</span>
+                                <li ng-repeat="buket_data in bucket_data">
+                                  <span ng-if="viewBy=='transaction_amount' || !viewBy" style="height:{{buket_data.expenses/max_val+$index*8}}px;">{{buket_data.expenses | nfcurrency}}</span>
+                                  <span ng-if="viewBy=='report_line_id'" style="height:{{buket_data.expenses/max_val+$index*8}}px;">{{buket_data.expenses | number}}</span>
                                 </li>
                               </ul>
                             </div>
@@ -345,23 +375,35 @@
                     <div class="white-panel">
                           <h3 class="panel-heading">by employee</h3>
                           <div class="custom-scroller">
-                              <div class="table-responsive text-uppercase">
-                                  <table class="table table-hover">
-                                    <thead>
-                                      <tr>
-                                        <th width="60%">employee name</th>
-                                        <th width="20%" class="text-center">amount</th>
-                                        <th width="20%" class="text-center">EXPENSE ITEMS</th>
-                                      </tr>
-                                    </thead>
-                                    <tbody>
-                                      <tr ng-repeat="employee_item in employee_name_data">
-                                        <td>{{employee_item.e_employee_name}}</td>
-                                        <td class="text-center">{{employee_item.amount | nfcurrency}}</td>
-                                        <td class="text-center">{{employee_item.expenses}}</td>
-                                      </tr>
-                                    </tbody>
-                                  </table>
+                              <div class="table-responsive">
+                                <table class="table table-hover">
+                                  <thead class="text-uppercase">
+                                    <tr>
+                                      <th width="50%"><a style="color:#fff;" href="javascript:void(0);" ng-click="sortType = 'e_employee_name'; sortReverse = !sortReverse">
+                                          employee name
+                                          <span ng-show="sortType == 'e_employee_name' && !sortReverse" class="fa fa-caret-down"></span>
+                                          <span ng-show="sortType == 'e_employee_name' && sortReverse" class="fa fa-caret-up"></span></a>
+                                      </th>
+                                      <th width="15%" class="text-center"><a style="color:#fff;" href="javascript:void(0);" ng-click="sortType = 'amount'; sortReverse = !sortReverse">
+                                            amount
+                                            <span ng-show="sortType == 'amount' && !sortReverse" class="fa fa-caret-down"></span>
+                                            <span ng-show="sortType == 'amount' && sortReverse" class="fa fa-caret-up"></span></a>
+                                      </th>
+                                      <th width="35%" class="text-center"><a style="color:#fff;" href="javascript:void(0);" ng-click="sortType = 'expenses'; sortReverse = !sortReverse">
+                                            # Expense Items
+                                            <span ng-show="sortType == 'expenses' && !sortReverse" class="fa fa-caret-down"></span>
+                                            <span ng-show="sortType == 'expenses' && sortReverse" class="fa fa-caret-up"></span></a>
+                                      </th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    <tr ng-repeat="employee_item in employee_name_data | orderBy:sortType:sortReverse">
+                                      <td>{{employee_item.e_employee_name}}</td>
+                                      <td class="text-center">{{employee_item.amount | nfcurrency}}</td>
+                                      <td class="text-center">{{employee_item.expenses}}</td>
+                                    </tr>
+                                  </tbody>
+                                </table>
                               </div>
                           </div>
                       </div>
@@ -371,23 +413,38 @@
                 	<div class="white-panel">
                         <h3 class="panel-heading">by department</h3>
                         <div class="custom-scroller">
-                            <div class="table-responsive text-uppercase">
-                                <table class="table table-hover">
-                                  <thead>
-                                    <tr>
-                                      <th width="60%">department name</th>
-                                      <th width="20%" class="text-center">country</th>
-                                      <th width="20%" class="text-center">amount</th>
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    <tr ng-repeat="department_item in department_name_data">
-                                      <td>{{department_item.e_department_name}}</td>
-                                      <td class="text-center">{{department_item.location_country}}</td>
-                                      <td class="text-center">{{department_item.amount | nfcurrency}}</td>
-                                    </tr>
-                                  </tbody>
-                                </table>
+                            <div class="table-responsive">
+                              <table class="table table-hover">
+                                <thead class="text-uppercase">
+                                  <tr>
+                                    <th width="60%">
+                                      <a style="color:#fff;" href="javascript:void(0);" ng-click="sortType1 = 'e_department_name'; sortReverse1 = !sortReverse1">
+                                          department name
+                                          <span ng-show="sortType1 == 'e_department_name' && !sortReverse1" class="fa fa-caret-down"></span>
+                                          <span ng-show="sortType1 == 'e_department_name' && sortReverse1" class="fa fa-caret-up"></span></a>
+                                    </th>
+                                    <th width="20%" class="text-center">
+                                      <a style="color:#fff;" href="javascript:void(0);" ng-click="sortType1 = 'location_country'; sortReverse1 = !sortReverse1">
+                                          country
+                                          <span ng-show="sortType1 == 'location_country' && !sortReverse1" class="fa fa-caret-down"></span>
+                                          <span ng-show="sortType1 == 'location_country' && sortReverse1" class="fa fa-caret-up"></span></a>
+                                    </th>
+                                    <th width="20%" class="text-center">
+                                      <a style="color:#fff;" href="javascript:void(0);" ng-click="sortType1 = 'amount'; sortReverse1 = !sortReverse1">
+                                          amount
+                                          <span ng-show="sortType1 == 'amount' && !sortReverse1" class="fa fa-caret-down"></span>
+                                          <span ng-show="sortType1 == 'amount' && sortReverse1" class="fa fa-caret-up"></span></a>
+                                    </th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr ng-repeat="department_item in department_name_data | orderBy:sortType1:sortReverse1">
+                                    <td>{{department_item.e_department_name}}</td>
+                                    <td class="text-center">{{department_item.location_country}}</td>
+                                    <td class="text-center">{{department_item.amount | nfcurrency}}</td>
+                                  </tr>
+                                </tbody>
+                              </table>
                             </div>
                         </div>
                     </div>
@@ -431,11 +488,13 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Duplicate Details</h4>
+        <div class="search-info clearfix">
+            <input style="width:30%" class="form-control pull-left" ng-model="searchText" placeholder="Type here"/>
+            <p>Total Records: {{duplicate_data.length}}</p>
+        </div>
       </div>
       <div class="table-wrap text-center">
-        <input style="width:30%" class="form-control" ng-model="searchText" placeholder="Type here"/>
 
-              <p class="text-right">Total Records: {{duplicate_data.length}} &nbsp;</p>
           		<table id="my-table" class="table table-striped table-bordered">
                   <thead>
                     <tr>
@@ -514,10 +573,10 @@
                       <td>{{duplicate.spend_category_name}}</td>
                       <td>{{duplicate.payment_type_name}}</td>
                       <td>{{duplicate.transaction_currency_code}}</td>
-                      <td>{{duplicate.transaction_amount|currency}}</td>
+                      <td>{{duplicate.transaction_amount}}</td>
                       <td>{{duplicate.exchange_rate}}</td>
-                      <td>{{duplicate.posted_amount|currency}}</td>
-                      <td>{{duplicate.approved_amount|currency}}</td>
+                      <td>{{duplicate.posted_amount|number}}</td>
+                      <td>{{duplicate.approved_amount|number}}</td>
                       <td>{{duplicate.vendor_description}}</td>
                       <td>{{duplicate.location_name}}</td>
                       <td>{{duplicate.description}}</td>
@@ -528,15 +587,15 @@
                       <td>{{duplicate.has_comments}}</td>
                       <td>{{duplicate.has_exceptions}}</td>
                       <td>{{duplicate.c_number_of_duplicates}}</td>
-                      <td>{{duplicate.c_total_duplicate_amount|currency}}</td>
+                      <td>{{duplicate.c_total_duplicate_amount|number}}</td>
                     </tr>
 
               		</tbody>
                 </table>
-
-
+                <span class="loader" style="display:none;">Loading ...&nbsp;&nbsp;<img  src="/static/images/loader.gif" alt=""/></span>
           </div>
     </div>
   </div>
 </div>
 <!--// Modal-->
+<script src="/static/js/jquery.multiselect.min.js"></script>

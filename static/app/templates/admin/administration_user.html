@@ -1,0 +1,342 @@
+<div class="main-container">
+  <!--Loader-->
+  <div ng-if="loading" class="body-loader"></div>
+  <!--// Loader-->
+
+	<div class="header-bottom">
+        <div class="bottom-part clearfix">
+            <div class="nav-toggle"></div>
+            <div class="page-title">
+                <h1>View User</h1>
+            </div>
+         </div>
+    </div>
+    <!--/.header-bottom-->
+
+  <div class="alert alert-success" role="alert" ng-if="status=='success'">{{message}}</div>
+
+	<div class="white-panel">
+  	<div class="panel-heading-btns">
+    	<a ng-if="add_user!=''" class="btn btn-success" ng-click="_add_user()" data-toggle="modal" data-target="#AddUser">Add User</a>
+      <a ng-if="assign_roles!=''" class="btn btn-success" ng-click="_assign_data_to_user('Roles')">Assign Roles</a>
+      <a ng-if="assign_process!=''" class="btn btn-success" ng-click="_assign_data_to_user('Processes')">Assign	Processes</a>
+      <a ng-if="assign_dashboard!=''" class="btn btn-success" ng-click="_assign_data_to_user('Dashboards')">Assign Dashboards</a>
+      <a ng-if="assign_countries!=''" class="btn btn-success" ng-click="_assign_data_to_user('Countries')">Assign	Countries</a>
+      <a ng-if="assign_hiearchie!=''" class="btn btn-success" ng-click="_assign_data_to_user('Hierarchies')">Assign Hierarchies</a>
+      <a class="AssignDataModel" data-toggle="modal" data-target="#AssignDataModel"></a>
+
+      <a ng-if="deactivate_user!=''" href="javascript:void(0);" ng-click="make_status()" class="btn btn-success">
+        <span class="roll-msg">Deactivate User</span>
+        <img class="ld" style="display:none;" src="/static/images/btn-loader.gif" alt=""/>
+      </a>
+
+      <input type="hidden" name="user_id" class="user_id"/>
+    </div>
+
+  	<div class="panel-body">
+    	<div class="table-wrap text-center">
+        	<table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th class="text-center">&nbsp;</th>
+                  <th class="text-center">Company Name</th>
+                  <th class="text-center">User Name</th>
+                  <th class="text-center">First/Last Name</th>
+                  <th class="text-center">Email Address</th>
+                  <th class="text-center">Last Updated By</th>
+                  <th class="text-center">Last Updated Date</th>
+                  <th class="text-center">Active</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr ng-repeat="dat in userData">
+                  <td>
+                  	<div class="custom-radio label-only">
+                        <input type="radio" value="{{dat[0][0]}}" class="role-u" name="role" id="role1_{{dat[0][0]}}">
+                        <label for="role1_{{dat[0][0]}}">&nbsp;</label>
+                    </div>
+                  </td>
+
+                  <td>{{dat[0][2]}}</td>
+                  <td>{{dat[0][3]}}</td>
+                  <td>{{dat[0][4]}} {{dat[0][5]}}</td>
+                  <td>{{dat[0][6]}}</td>
+                  <td class="updated_by">{{dat[0][8]}}</td>
+                  <td class="updated_date">{{dat[0][9].$date | date:'M/d/yyyy h:mm a'}}</td>
+                  <td ng-if="dat[0][7]=='Y'" class="active_stat">Yes</td>
+                  <td ng-if="dat[0][7]=='N'" class="active_stat">No</td>
+                </tr>
+
+              </tbody>
+            </table>
+
+        </div>
+    </div>
+  </div>
+
+
+  <!-- START Add User Model-->
+    <div class="modal fade log-modal" id="AddUser" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <form name="userForm" class="frm form-horizontal" ng-submit="userFormData()" autocomplete="off" enctype="multipart/form-data" novalidate>
+          <div class="modal-header">
+            <button type="button" ng-click="close();" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">{{popup_text}}</h4>
+            <div class="alert alert-success" role="alert" ng-if="status_role=='success'">{{message_role}}</div>
+            <div class="alert alert-danger" role="alert" ng-if="status_role=='danger'">{{message_role}}</div>
+          </div>
+
+          <p ng-if="cmp.edit_dat.length==0" style="text-align:center;margin-top:10px;"><img class="loader" src="/static/images/loader.gif" alt=""/> &nbsp;&nbsp;Please wait...</p>
+
+          <div ng-if="cmp.edit_dat.length!=0" class="modal-body">
+
+            <div class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-lg-2">Company Name</label>
+                    <div class="col-lg-3">
+                      <select name="company_name" class="form-control company_name chk">
+                          <option ng-repeat="comp in compData" value="{{comp.id}}" ng-selected="{{comp.id == UserCompId}}">{{comp.short_name}}</option>
+                      </select>
+                    </div>
+                    <label class="control-label col-lg-1">Active</label>
+                    <div class="col-lg-1">
+                      <div class="switch">
+                          <input ng-if="cmp.edit_dat.fields.active_flag=='Y'" checked="checked" name="active_flag" value="Y" id="toggle-active-3" class="cmn-toggle cmn-toggle-round active_flag" type="checkbox">
+                          <input ng-if="cmp.edit_dat.fields.active_flag=='N'" name="active_flag" value="Y" id="toggle-active-3" class="cmn-toggle cmn-toggle-round active_flag" type="checkbox">
+                          <input ng-if="popup_text=='Add User'" name="active_flag" value="Y" id="toggle-active-3" class="cmn-toggle cmn-toggle-round active_flag" type="checkbox">
+
+                          <label for="toggle-active-3"></label>
+                      </div>
+                    </div>
+                    <label class="control-label col-lg-1">User Name</label>
+                    <div class="col-lg-2">
+                        <input class="form-control user_name" ng-model="user_name" type="text" required>
+                        <span ng-show="userForm.user_name.$touched && userForm.user_name.$invalid" style="color:#FF001F">This field is required.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-2">First Name</label>
+                    <div class="col-lg-2">
+                        <input class="form-control fisrt_name" ng-model="fisrt_name" type="text" required>
+                        <span ng-show="userForm.fisrt_name.$touched && userForm.fisrt_name.$invalid" style="color:#FF001F">This field is required.</span>
+                    </div>
+                    <label class="control-label col-lg-1">Nick Name</label>
+                    <div class="col-lg-2">
+                        <input class="form-control nice_name" ng-model="nice_name" type="text" required>
+                        <span ng-show="userForm.nice_name.$touched && userForm.nice_name.$invalid" style="color:#FF001F">This field is required.</span>
+                    </div>
+                    <label class="control-label col-lg-1">Last Name</label>
+                    <div class="col-lg-2">
+                        <input class="form-control last_name" ng-model="last_name" type="text" required>
+                        <span ng-show="userForm.last_name.$touched && userForm.last_name.$invalid" style="color:#FF001F">This field is required.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-lg-2">Email Address</label>
+                  <div class="col-lg-4">
+                      <input class="form-control email" ng-model="email" type="text" required>
+                      <span ng-show="userForm.email.$touched && userForm.email.$invalid" style="color:#FF001F">This field is required.</span>
+                  </div>
+                  <label class="control-label col-lg-1">password</label>
+                  <div class="col-lg-3">
+                      <input class="form-control password" ng-model="password" type="text" required>
+                      <span ng-show="userForm.password.$touched && userForm.password.$invalid" style="color:#FF001F">This field is required.</span>
+                  </div>
+                </div>
+
+                <div class="form-group" ng-if="popup_text!='Add User'">
+                  <label class="control-label col-lg-2">Last Updated By</label>
+                    <div class="col-lg-3">
+                      <input type="text" value="{{cmp.edit_dat.fields.last_updated_by}}" readonly class="form-control">
+                    </div>
+                    <label class="control-label col-lg-2">Last Updated Date</label>
+                    <div class="col-lg-3">
+                      <input type="text" value="{{cmp.edit_dat.fields.last_updated_date|date:'M/d/yyyy h:mm a'}}" readonly class="form-control">
+                    </div>
+                </div>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <input type="hidden" name="user_id" value="{{cmp.edit_dat.pk}}" class="edit_user_id"/>
+            <button type="button" ng-click="close();" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" ng-disabled="userForm.$invalid"><span class="role_save">Save changes</span>
+              <img class="lder" style="display:none;" src="/static/images/btn-loader.gif" alt=""/>
+            </button>
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- END Add User Model-->
+
+
+    <!-- START Assign User Data Model-->
+      <div class="modal fade log-modal" id="AssignDataModel" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <form name="userRoleForm" class="frm form-horizontal" ng-submit="userRoleData()" autocomplete="off" enctype="multipart/form-data" novalidate>
+            <div class="modal-header">
+              <button type="button" ng-click="close();" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">{{popup_text}}</h4>
+              <div class="alert alert-success" role="alert" ng-if="status_role=='success'">{{message_role}}</div>
+              <div class="alert alert-danger" role="alert" ng-if="status_role=='danger'">{{message_role}}</div>
+            </div>
+
+            <p ng-if="user_companyName.length==0" style="text-align:center;margin-top:10px;"><img class="loader" src="/static/images/loader.gif" alt=""/> &nbsp;&nbsp;Please wait...</p>
+
+            <div ng-if="user_companyName.length!=0" class="modal-body">
+
+              <div class="form-horizontal">
+                  <div class="form-group">
+                      <label class="control-label col-lg-2">Company Name</label>
+                      <div class="col-lg-6">
+                          <input class="form-control user_companyName" ng-model="user_companyName" type="text" readonly>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                      <label class="control-label col-lg-2">User Name</label>
+                      <div class="col-lg-6">
+                          <input class="form-control user_userName" ng-model="user_userName" type="text" readonly>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="control-label col-lg-2">Email Address</label>
+                    <div class="col-lg-6">
+                        <input class="form-control user_emailAddress" ng-model="user_emailAddress" type="text" readonly>
+                    </div>
+                  </div>
+
+                  <!-- <div class="form-group">
+                        <div class="col-lg-8 col-lg-push-2">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <label class="control-label ms-label">Assigned {{assign_type}}</label>
+                                      <select name="assign_data" ng-model="assign_data" id="optgroupEdit" class="form-control assign_data chk" size="8" multiple="multiple">
+                                          <option ng-repeat="ur in user_added_data" value="{{ur[0]}}">{{ur[1]}}</option>
+                                      </select>
+                                  </div>
+
+                                  <div class="col-sm-2">
+                                      <div class="ms-btn-holder">
+                                        <button type="button" id="optgroupEdit_rightSelected" class="btn btn-block btn-primary"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                                        <button type="button" id="optgroupEdit_leftSelected" class="btn btn-block btn-primary"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                                      </div>
+                                  </div>
+
+                                  <div class="col-sm-5">
+                                    <label class="control-label ms-label">Available	{{assign_type}}</label>
+                                      <select id="optgroupEdit_to" class="form-control" size="8" multiple="multiple">
+                                          <option ng-repeat="dr in master_data" value="{{dr[0]}}">{{dr[1]}}</option>
+                                      </select>
+                                  </div>
+                              </div>
+                          </div>
+                  </div> -->
+
+                  <div class="form-group">
+                  <h4>Available Processes</h4>
+                  <div class="process-table">
+                    <table class="table table-striped">
+                      <tr>
+                        <td width="70%">Process 1</td>
+                        <td width="30%" class="text-right"><a data-toggle="modal" data-target="#myModal" class="btn btn-default">Assign Country</a></td>
+                      </tr>
+                      <tr>
+                        <td width="70%">Process 2</td>
+                        <td width="30%" class="text-right"><a data-toggle="modal" data-target="#myModal" class="btn btn-default">Assign Country</a></td>
+                      </tr>
+                      <tr>
+                        <td width="70%">Process 3</td>
+                        <td width="30%" class="text-right"><a data-toggle="modal" data-target="#myModal" class="btn btn-default">Assign Country</a></td>
+                      </tr>
+                      <tr>
+                        <td width="70%">Process 4</td>
+                        <td width="30%" class="text-right"><a data-toggle="modal" data-target="#myModal" class="btn btn-default">Assign Country</a></td>
+                      </tr>
+                    </table>
+
+                  </div>
+                  </div>
+
+
+
+
+                  <!--<div class="form-group" ng-if="popup_text!='Assign Roles'">
+                    <label class="control-label col-lg-2">Last Updated By</label>
+                      <div class="col-lg-3">
+                        <input type="text" value="{{cmp.edit_dat.fields.last_updated_by}}" readonly class="form-control">
+                      </div>
+                      <label class="control-label col-lg-2">Last Updated Date</label>
+                      <div class="col-lg-3">
+                        <input type="text" value="{{cmp.edit_dat.fields.last_updated_date|date:'M/d/yyyy h:mm a'}}" readonly class="form-control">
+                      </div>
+                  </div>-->
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <input type="hidden" name="user_id" value="{{user_id}}" class="_edit_user_id"/>
+              <input type="hidden" name="company_id" value="{{user_company_id}}" class="edit_company_id"/>
+              <input type="hidden" name="assign_type" class="assign_type"/>
+              <button type="button" ng-click="close();" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" ng-disabled="userRoleForm.$invalid"><span class="role_save">Save changes</span>
+                <img class="lder" style="display:none;" src="/static/images/btn-loader.gif" alt=""/>
+              </button>
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <!-- END Assign User Data Model-->
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Assigned Process > Hierarchies</h4>
+      </div>
+      <div class="modal-body">
+       <div class="form-group">
+        <div class="row">
+          <div class="col-lg-12">
+              <div class="row">
+                  <div class="col-sm-5">
+                      <label class="control-label ms-label">Assigned {{assign_type}}</label>
+                        <select name="assign_data" ng-model="assign_data" id="optgroupEdit" class="form-control assign_data chk" size="8" multiple="multiple">
+                            <option ng-repeat="ur in user_added_data" value="{{ur[0]}}">{{ur[1]}}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <div class="ms-btn-holder">
+                          <button type="button" id="optgroupEdit_rightSelected" class="btn btn-block btn-primary"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                          <button type="button" id="optgroupEdit_leftSelected" class="btn btn-block btn-primary"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-5">
+                      <label class="control-label ms-label">Available {{assign_type}}</label>
+                        <select id="optgroupEdit_to" class="form-control" size="8" multiple="multiple">
+                            <option ng-repeat="dr in master_data" value="{{dr[0]}}">{{dr[1]}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/multiselect.min.js"></script>
+</div>

@@ -37,7 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'administrator'
+    'administrator',
+    'datamanagement',
+    'dashboard',
+    'managerolepermission',
+    'processmanagement',
+    'dashboardmanagement',
+    'companymanagement',
+    'messagemanagement',
+    'usermanagement',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -142,9 +150,15 @@ STATICFILES_DIRS = (
 )
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_HOST_USER = 'ramesh.unified@gmail.com'
-EMAIL_HOST_PASSWORD = 'kolkata123?'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_USE_TLS = True
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'ramesh.unified@gmail.com'
+# EMAIL_HOST_PASSWORD = 'kolkata123?'
+
+EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+EMAIL_HOST = 'email-smtp.us-west-2.amazonaws.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'AKIAIH2FGERXQBFDPPUQ'
+EMAIL_HOST_PASSWORD = 'Aq6T5NG4l6rpug2EreU/gWB5I8uoujojS6GlarpgiOkM'

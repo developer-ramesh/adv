@@ -10,10 +10,14 @@
         <!-- Bootstrap CSS CDN -->
 
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw==" crossorigin="anonymous">
+
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
         <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
         <!-- Google CDN jQuery with fallback to local -->
         <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.css" rel="stylesheet" />
+
         <script src="{% static 'js/developer-plugin.js' %}"></script>
         <script src="{% static 'js/modernizr.js' %}"></script>
         <script src="{% static 'js/angular.min.js' %}"></script>
@@ -22,6 +26,21 @@
         <script src="{% static 'app/angular-js/admin_app.js' %}"></script>
         <script src="{% static 'app/angular-js/services/getsummaryService.js' %}"></script>
         <script src="{% static 'app/angular-js/controllers/controller.js' %}"></script>
+        <script src="{% static 'app/angular-js/controllers/summaryCtrl.js' %}"></script>
+        <script src="{% static 'app/angular-js/controllers/duplicateCtrl.js' %}"></script>
+        <script src="{% static 'app/angular-js/controllers/highdollarCtrl.js' %}"></script>
+        <script src="{% static 'app/angular-js/controllers/highmileageCtrl.js' %}"></script>
+        <script src="{% static 'app/angular-js/controllers/suspiciousKeywordsCtrl.js' %}"></script>
+        <script src="{% static 'app/angular-js/controllers/highriskexpcatCtrl.js' %}"></script>
+        <script src="{% static 'app/angular-js/controllers/personalmealsCtrl.js' %}"></script>
+        <script src="{% static 'app/angular-js/controllers/dailymealsCtrl.js' %}"></script>
+        <script src="{% static 'app/angular-js/controllers/highriskmerchantcatCtrl.js' %}"></script>
+        <script src="{% static 'app/angular-js/controllers/adminRoleCtrl.js' %}"></script>
+        <script src="{% static 'app/angular-js/controllers/adminProcessCtrl.js' %}"></script>
+        <script src="{% static 'app/angular-js/controllers/adminDashboardCtrl.js' %}"></script>
+        <script src="{% static 'app/angular-js/controllers/adminCompanyCtrl.js' %}"></script>
+        <script src="{% static 'app/angular-js/controllers/adminMessageCtrl.js' %}"></script>
+        <script src="{% static 'app/angular-js/controllers/adminUserCtrl.js' %}"></script>
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -30,6 +49,7 @@
         <![endif]-->
         <script src="https://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
         <script src="{% static 'js/google_marker.js' %}"></script>
+        <script src="{% static 'js/dirPagination.js' %}"></script>
 
     </head>
     <body ng-app="myapp">

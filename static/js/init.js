@@ -81,8 +81,8 @@ $( function() {
 			theme:"dark-thin",
 			scrollbarPosition:"outside"
 		});
-		
-		
+
+
 	}, 1000);
 
 	///////// Footer Shown
@@ -111,14 +111,14 @@ $( function() {
 	///////// Clear Search Field
 	$('.cs').clearSearch();
 
-	
-	
+
+
 	///////Header Date Toggle
 	if ($(window).width() < 1400) {
 		$(document).on('click', function(e) {
 			var elem = $(e.target).closest('#BtnDate'),
 				box  = $(e.target).closest('#dateWrap');
-			
+
 			if ( elem.length ) {
 				e.preventDefault();
 				$('#dateWrap').toggle();
@@ -126,32 +126,34 @@ $( function() {
 				$('#dateWrap').hide();
 			}
 		});
-		
+
 	}
-	
+
 	if ($(window).width() < 1024) {
 		// Mobile Doc Toolbar
 		$(document).on('click', '.toggle-doc', function() {
 			$(this).toggleClass('doc-close');
 			$('.header-bottom .doc-toolbar-cont').fadeToggle();
 		});
-		
+
 		// Mobile Doc Toolbar
 		$(document).on('click', '.close-leftmenu', function() {
 			$('body').removeClass('visible-nav');
 		});
 	}
-	
+
 	/*setTimeout(function(){
 		$('#my-table').tablesorter();
 	},4000);*/
-	
+
 	/*$('#ListView').on('shown.bs.modal', function() {
 		alert();
 	});*/
 	
+	setTimeout(function(){
+		$('#optgroup').multiselect();
+	}, 1000);
 	
-
 });
 
 

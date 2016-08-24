@@ -34,8 +34,8 @@
 	.header-bottom .doc-toolbar-cont .doc-date .date-holder{
 		display:none;
 		background:#367fa9;
-		width:250px;
-		left:-100px;
+		width:220px;
+		left:-85px;
 		top:46px;
 		position:absolute;
 	}
@@ -393,6 +393,12 @@
 	.login-container .login-footer .copyright{
 		float:none;
 		line-height:normal;
+	}
+	.permission-denied .deny-block{
+		margin-top:50px;
+	}
+	.permission-denied .deny-block .icon-holder{
+		font-size:80px;
 	}
 }
 

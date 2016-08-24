@@ -1,0 +1,392 @@
+<div class="main-container">
+  <!--Loader-->
+  <div ng-if="loading" class="body-loader"></div>
+  <!--// Loader-->
+
+	<div class="header-bottom">
+        <div class="bottom-part clearfix">
+            <div class="nav-toggle"></div>
+            <div class="page-title">
+                <h1>View Company</h1>
+            </div>
+         </div>
+    </div>
+    <!--/.header-bottom-->
+
+  <div class="alert alert-success" role="alert" ng-if="status=='success'">{{message}}</div>
+
+	<div class="white-panel">
+  	<div class="panel-heading-btns">
+    	<a ng-if="add_company!=''" class="btn btn-success" ng-click="_add_company()" data-toggle="modal" data-target="#EditRole">Add Company</a>
+      <a ng-if="deactivate_company!=''" href="javascript:void(0);" ng-click="make_status()" class="btn btn-success">
+        <span class="roll-msg">Deactivate Company</span>
+        <img class="ld" style="display:none;" src="/static/images/btn-loader.gif" alt=""/>
+      </a>
+      <a ng-if="manage_license!=''" class="btn btn-success" ng-click="_manage_license()">Manage Licenses</a>
+      <a class="manage_license" data-toggle="modal" data-target="#manageLicense"></a>
+      <a ng-if="manage_dashboard!=''" class="btn btn-success" ng-click="_manage_dashboard()">Manage Dashboards</a>
+      <a class="manage_dashboard" data-toggle="modal" data-target="#manageDashboard"></a>
+      <input type="hidden" name="company_id" class="company_id"/>
+    </div>
+
+  	<div class="panel-body">
+    	<div class="table-wrap text-center">
+        	<table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th class="text-center">&nbsp;</th>
+                  <th class="text-center">Short Name</th>
+                  <th class="text-center">Full Name</th>
+                  <th class="text-center">Primary Contact</th>
+                  <th class="text-center">Primary Contact Email</th>
+                  <th class="text-center">Last Updated By</th>
+                  <th class="text-center">Last Updated Date</th>
+                  <th class="text-center">Active</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr ng-repeat="dat in companyData">
+                  <td>
+                  	<div class="custom-radio label-only">
+                        <input type="radio" value="{{dat.pk}}" class="role-u" name="role" id="role1_{{dat.pk}}">
+                        <label for="role1_{{dat.pk}}">&nbsp;</label>
+                    </div>
+                  </td>
+                  <td>
+                  	<a ng-if="update_role!=''" ng-click="editCompany(dat.pk);" data-toggle="modal" data-target="#EditRole" style="cursor:pointer">{{dat.fields.short_name}}</a>
+                  </td>
+                  <td>{{dat.fields.full_name}}</td>
+                  <td>{{dat.fields.primary_contact_name}}</td>
+                  <td>{{dat.fields.primary_contact_email}}</td>
+                  <td class="updated_by">{{dat.fields.last_updated_by}}</td>
+                  <td class="updated_date">{{dat.fields.last_updated_date|date:"M/d/yyyy h:mm a"}}</td>
+                  <td ng-if="dat.fields.active_flag=='Y'" class="active_stat">Yes</td>
+                  <td ng-if="dat.fields.active_flag=='N'" class="active_stat">No</td>
+                </tr>
+
+              </tbody>
+            </table>
+
+        </div>
+    </div>
+  </div>
+
+
+  <!-- Start Company Add/Edit Modal -->
+  <div class="modal fade log-modal" id="EditRole" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form name="companyForm" class="frm form-horizontal" ng-submit="companyFormData(companyForm)" autocomplete="off" enctype="multipart/form-data" novalidate>
+      <div class="modal-header">
+        <button type="button" ng-click="close();" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{popup_text}}</h4>
+        <div class="alert alert-success" role="alert" ng-if="status_role=='success'">{{message_role}}</div>
+        <div class="alert alert-danger" role="alert" ng-if="status_role=='danger'">{{message_role}}</div>
+      </div>
+
+      <p ng-if="cmp.edit_dat.length==0" style="text-align:center;margin-top:10px;"><img class="loader" src="/static/images/loader.gif" alt=""/> &nbsp;&nbsp;Please wait...</p>
+
+      <div ng-if="cmp.edit_dat.length!=0" class="modal-body">
+
+        <div class="form-horizontal">
+            <div class="form-group">
+              <label class="control-label col-lg-2">Short Name</label>
+                <div class="col-lg-4">
+                  <input type="text" name="short_name" ng-model="cmp.short_name" ng-minlength="5" class="form-control short_name chk" required>
+                  <span ng-show="companyForm.short_name.$touched && companyForm.short_name.$invalid && !companyForm.short_name.$error.minlength" style="color:#FF001F">This field is required.</span>
+                  <span ng-show="companyForm.short_name.$error.minlength" style="color:#FF001F">Min length must be 5 character</span>
+                </div>
+                <label class="control-label col-lg-1">Active</label>
+                <div class="col-lg-1">
+                  <div class="switch">
+                      <input ng-if="cmp.edit_dat.fields.active_flag=='Y'" checked="checked" name="active_flag" value="Y" id="toggle-active-3" class="cmn-toggle cmn-toggle-round active_flag" type="checkbox">
+                      <input ng-if="cmp.edit_dat.fields.active_flag=='N'" name="active_flag" value="Y" id="toggle-active-3" class="cmn-toggle cmn-toggle-round active_flag" type="checkbox">
+                      <input ng-if="popup_text=='Add Company'" name="active_flag" value="Y" id="toggle-active-3" class="cmn-toggle cmn-toggle-round active_flag" type="checkbox">
+
+                      <label for="toggle-active-3"></label>
+                  </div>
+                </div>
+                <label class="control-label col-lg-2">Single Sign-on</label>
+                <div class="col-lg-1">
+                  <div class="switch">
+                      <input ng-if="cmp.edit_dat.fields.single_sign_on_flag=='Y'" checked="checked" name="single_sign_on_flag" value="Y" id="toggle-active-4" class="cmn-toggle cmn-toggle-round single_sign_on_flag" type="checkbox">
+                      <input ng-if="cmp.edit_dat.fields.single_sign_on_flag=='N'" name="single_sign_on_flag" value="Y" id="toggle-active-4" class="cmn-toggle cmn-toggle-round single_sign_on_flag" type="checkbox">
+                      <input ng-if="popup_text=='Add Company'" name="single_sign_on_flag" value="Y" id="toggle-active-4" class="cmn-toggle cmn-toggle-round single_sign_on_flag" type="checkbox">
+
+                      <label for="toggle-active-4"></label>
+                  </div>
+                </div>
+            </div>
+            <div class="form-group">
+            	<label class="control-label col-lg-2">Full Name</label>
+                <div class="col-lg-4">
+                  <input type="text" name="full_name" ng-model="cmp.full_name" ng-minlength="5" class="form-control full_name chk" required>
+                  <span ng-show="companyForm.full_name.$touched && companyForm.full_name.$invalid && !companyForm.full_name.$error.minlength" style="color:#FF001F">This field is required.</span>
+                  <span ng-show="companyForm.full_name.$error.minlength" style="color:#FF001F">Min length must be 5 character</span>
+                </div>
+            </div>
+            <div class="form-group">
+            	<label class="control-label col-lg-2">Address</label>
+                <div class="col-lg-9">
+                  <div class="form-group">
+                  	<div class="col-lg-12">
+                        <input type="text" name="address1" ng-model="cmp.address1" ng-minlength="5" class="form-control address1 chk" required style="margin-bottom:15px">
+                        <span ng-show="companyForm.address1.$touched && companyForm.address1.$invalid && !companyForm.address1.$error.minlength" style="color:#FF001F">This field is required.</span>
+                        <span ng-show="companyForm.address1.$error.minlength" style="color:#FF001F">Min length must be 5 character</span>
+                        <input type="text" class="form-control address2" name="address2" ng-model="address2">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                  	<div class="col-lg-3">
+                      <input type="text" name="city" ng-model="cmp.city" placeholder="CITY" class="form-control city chk" required>
+                      <span ng-show="companyForm.city.$touched && companyForm.city.$invalid" style="color:#FF001F">This field is required.</span>
+
+                    </div>
+                    <div class="col-lg-3">
+                      <input type="text" name="state" ng-model="cmp.state" placeholder="STATE" class="form-control state chk" required>
+                      <span ng-show="companyForm.state.$touched && companyForm.state.$invalid" style="color:#FF001F">This field is required.</span>
+
+                    </div>
+                    <div class="col-lg-3">
+                      <input type="text" name="country" ng-model="cmp.country" placeholder="COUNTRY" class="form-control state chk" required>
+                      <span ng-show="companyForm.country.$touched && companyForm.country.$invalid" style="color:#FF001F">This field is required.</span>
+
+                    </div>
+                    <div class="col-lg-3">
+                      <input type="number" name="zip_code" ng-model="cmp.zip_code" placeholder="ZIP CODE" class="form-control zip_code chk" maxlength="10" required>
+                      <span ng-show="companyForm.zip_code.$touched && companyForm.zip_code.$invalid" style="color:#FF001F">This field is required.</span>
+
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="form-group">
+            	<label class="control-label col-lg-2">Logo Image</label>
+                <div class="col-lg-5">
+                  <div class="row">
+                    <div class="col-lg-11">
+                      <input type="file" name="pic" id="pic" accept=".png,.jpg" class="form-control pic chk">
+                    </div>
+                    <div ng-if="cmp.logo!=''" class="prview_imagecustom col-sm-1" style="border: 1px solid #ccc;padding: 2px;float: left;background: rgba(204, 204, 204, 0.56);text-align: center;">
+                      <img src="/static/uploaded/{{cmp.logo}}" height="34" style="display:inline-block;"/>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="form-group">
+            	<label class="control-label col-lg-2">Contacts</label>
+                <div class="col-lg-9">
+                  <div class="form-group">
+                  	<div class="col-lg-4">
+                      <input type="text" name="primary_contact_name" ng-model="cmp.primary_contact_name" placeholder="PRIMARY CONTACT NAME" class="form-control primary_contact_name chk" required>
+                      <span ng-show="companyForm.primary_contact_name.$touched && companyForm.primary_contact_name.$invalid" style="color:#FF001F">This field is required.</span>
+
+                    </div>
+                    <div class="col-lg-4">
+                      <input type="text" name="primary_contact_email" ng-model="cmp.primary_contact_email" placeholder="PRIMARY CONTACT EMAIL" class="form-control primary_contact_email chk" required>
+                      <span ng-show="companyForm.primary_contact_email.$touched && companyForm.primary_contact_email.$invalid" style="color:#FF001F">This field is required.</span>
+
+                    </div>
+                    <div class="col-lg-4">
+                      <input type="text" name="primary_contact_phone" ng-model="cmp.primary_contact_phone" placeholder="PRIMARY CONTACT PHONE" class="form-control primary_contact_phone chk" required>
+                      <span ng-show="companyForm.primary_contact_phone.$touched && companyForm.primary_contact_phone.$invalid" style="color:#FF001F">This field is required.</span>
+
+                    </div>
+                  </div>
+                  <div class="form-group">
+                  	<div class="col-lg-4">
+                      <input type="text" name="secondary_contact_name" ng-model="cmp.secondary_contact_name" placeholder="SECONDARY CONTACT NAME" class="form-control secondary_contact_name chk" required>
+                      <span ng-show="companyForm.secondary_contact_name.$touched && companyForm.secondary_contact_name.$invalid" style="color:#FF001F">This field is required.</span>
+
+                    </div>
+                    <div class="col-lg-4">
+                      <input type="text" name="secondary_contact_email" ng-model="cmp.secondary_contact_email" placeholder="SECONDARY CONTACT EMAIL" class="form-control secondary_contact_email chk" required>
+                      <span ng-show="companyForm.secondary_contact_email.$touched && companyForm.secondary_contact_email.$invalid" style="color:#FF001F">This field is required.</span>
+
+                    </div>
+                    <div class="col-lg-4">
+                      <input type="text" name="secondary_contact_phone" ng-model="cmp.secondary_contact_phone" placeholder="SECONDARY CONTACT PHONE" class="form-control secondary_contact_phone chk" required>
+                      <span ng-show="companyForm.secondary_contact_phone.$touched && companyForm.secondary_contact_phone.$invalid" style="color:#FF001F">This field is required.</span>
+
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="form-group">
+            	<label class="control-label col-lg-2">Landing Page</label>
+                <div class="col-lg-9">
+                    <textarea class="form-control landing_page chk" name="landing_page" ng-model="cmp.landing_page_text" ng-minlength="5" rows="5" required ></textarea>
+                    <span ng-show="companyForm.landing_page.$touched && companyForm.landing_page.$invalid && !companyForm.landing_page.$error.minlength" style="color:#FF001F">This field is required.</span>
+                    <span ng-show="companyForm.landing_page.$error.minlength" style="color:#FF001F">Min length must be 5 character</span>
+                </div>
+            </div>
+            <div class="form-group" ng-if="popup_text!='Add Company'">
+              <label class="control-label col-lg-2">Last Updated By</label>
+                <div class="col-lg-3">
+                  <input type="text" value="{{cmp.edit_dat.fields.last_updated_by}}" readonly class="form-control">
+                </div>
+                <label class="control-label col-lg-2">Last Updated Date</label>
+                <div class="col-lg-3">
+                  <input type="text" value="{{cmp.edit_dat.fields.last_updated_date|date:'M/d/yyyy h:mm a'}}" readonly class="form-control">
+                </div>
+            </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <input type="hidden" name="company_id" value="{{cmp.edit_dat.pk}}" class="edit_company_id"/>
+        <input type="hidden" name="edit_pic_name" value="{{cmp.edit_dat.fields.logo}}" class="edit_pic_name"/>
+        <button type="button" ng-click="close();" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="companyForm.$invalid"><span class="role_save">Save changes</span>
+          <img class="lder" style="display:none;" src="/static/images/btn-loader.gif" alt=""/>
+        </button>
+      </div>
+      </form>
+    </div>
+  </div>
+  </div>
+<!-- END Company Add/Edit Modal -->
+
+
+<!-- START MANAGE LICENSES Model-->
+  <div class="modal fade log-modal" id="manageLicense" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form name="licenseForm" class="frm form-horizontal" ng-submit="licenseFormData()" autocomplete="off" enctype="multipart/form-data" novalidate>
+      <div class="modal-header">
+        <button type="button" ng-click="licenseclose();" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{popup_text}}</h4>
+        <div class="alert alert-success" role="alert" ng-if="status_role=='success'">{{message_role}}</div>
+        <div class="alert alert-danger" role="alert" ng-if="status_role=='danger'">{{message_role}}</div>
+      </div>
+
+      <p ng-if="comp_name.length==0" style="text-align:center;margin-top:10px;"><img class="loader" src="/static/images/loader.gif" alt=""/> &nbsp;&nbsp;Please wait...</p>
+
+      <div ng-if="comp_name.length!=0" class="modal-body">
+        <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="control-label col-lg-2">Company Name</label>
+                    <div class="col-lg-4">
+                        <input class="form-control" ng-model="comp_name" readonly type="text">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-lg-2">Full Name</label>
+                    <div class="col-lg-4">
+                        <input class="form-control" ng-model="comp_fullname" readonly type="text">
+                    </div>
+                </div>
+                <div class="form-group">
+                  <div class="table-wrap text-center">
+                        <table class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Process Name</th>
+                                    <th class="text-center"># of Licenses</th>
+                                    <th class="text-center">Active</th>
+                                    <th class="text-center">Last Updated By</th>
+                                    <th class="text-center">Last Updated Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="dat in compnay_licenses">
+                                    <td>{{dat[0]}}</td>
+                                    <td ng-if="dat[5]=='Y'"><input type="number" name="license" id="licence_{{dat[1]}}" ng-blur="lnc_update(dat[1])" value="{{dat[4]}}" maxlength="15" class="license"/></td>
+                                    <td ng-if="dat[5]=='N'">{{dat[1]}}</td>
+
+                                    <td ng-if="dat[5]=='N'">No</td>
+                                    <td ng-if="dat[5]=='Y'">Yes</td>
+                                    <td>{{dat[7]}}</td>
+                                    <td>{{dat[6].$date | date:'M/d/yyyy h:mm a' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" ng-click="close();" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" ng-click="license_close();" data-dismiss="modal"><span class="role_save">Manage Licenses</span>
+          <img class="lder" style="display:none;" src="/static/images/btn-loader.gif" alt=""/>
+        </button>
+      </div>
+      </form>
+    </div>
+  </div>
+  </div>
+  <!-- END MANAGE LICENSES Model-->
+
+
+
+  <!-- START Company Dashboard Model-->
+    <div class="modal fade log-modal" id="manageDashboard" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <form name="dashboardForm" class="frm form-horizontal" ng-submit="dashboardFormData()" autocomplete="off" enctype="multipart/form-data" novalidate>
+        <div class="modal-header">
+          <button type="button" ng-click="licenseclose();" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">{{popup_text}}</h4>
+          <div class="alert alert-success" role="alert" ng-if="status_role=='success'">{{message_role}}</div>
+          <div class="alert alert-danger" role="alert" ng-if="status_role=='danger'">{{message_role}}</div>
+        </div>
+
+        <p ng-if="dash_company_name.length==0" style="text-align:center;margin-top:10px;"><img class="loader" src="/static/images/loader.gif" alt=""/> &nbsp;&nbsp;Please wait...</p>
+
+        <div ng-if="dash_company_name.length!=0" class="modal-body">
+          <div class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label col-lg-2">Company Name</label>
+                <div class="col-lg-4">
+                    <input class="form-control" ng-model="dash_company_name" readonly type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-lg-2">Full Name</label>
+                <div class="col-lg-4">
+                    <input class="form-control" ng-model="dash_company_full_name" readonly type="text">
+                </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-lg-2">Assigned Dashboards</label>
+                <div class="col-lg-8">
+                    <select name="from" ng-model="assign_dashboard" id="optgroup" class="form-control assign_dashboard" size="8" multiple="multiple">
+                        <option ng-repeat="asign_dash in asigned_dashboard" value="{{asign_dash[0]}}">{{asign_dash[1]}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-8 col-lg-push-2 text-center">
+                  <button type="button" id="optgroup_leftSelected" class="btn btn-primary"><i class="glyphicon glyphicon-chevron-up"></i></button>
+                    <button type="button" id="optgroup_rightSelected" class="btn btn-primary"><i class="glyphicon glyphicon-chevron-down"></i></button>
+                </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-lg-2">Available	Dashboards</label>
+                <div class="col-lg-8">
+                    <select name="to" id="optgroup_to" class="form-control" size="8" multiple="multiple">
+                        <option ng-repeat="avlDash in available_dashboards" value="{{avlDash[0]}}">{{avlDash[1]}}</option>
+                    </select>
+                </div>
+            </div>
+
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" ng-click="close();" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary"><span class="role_save">Manage Dashboards</span>
+            <img class="lder" style="display:none;" src="/static/images/btn-loader.gif" alt=""/>
+          </button>
+        </div>
+        </form>
+      </div>
+    </div>
+    </div>
+    <!-- END Company Dashboard -->
+
+
+<script src="/static/js/multiselect.min.js"></script>
+</div>

@@ -1,0 +1,190 @@
+<div class="main-container">
+  <!--Loader-->
+  <div ng-if="loading" class="body-loader"></div>
+  <!--// Loader-->
+
+	<div class="header-bottom">
+        <div class="bottom-part clearfix">
+            <div class="nav-toggle"></div>
+            <div class="page-title">
+                <h1>View Dashbaord</h1>
+            </div>
+         </div>
+    </div>
+    <!--/.header-bottom-->
+
+  <div class="alert alert-success" role="alert" ng-if="status=='success'">{{message}}</div>
+
+	<div class="white-panel">
+  	<div class="panel-heading-btns">
+    	<a ng-if="add_dashboard!=''" class="btn btn-success" ng-click="_addDashboard()" data-toggle="modal" data-target="#EditRole">Add Dashbaord</a>
+      <a ng-if="deactivate_dashboard!=''" href="javascript:void(0);" ng-click="make_status()" class="btn btn-success">
+        <span class="roll-msg">Deactivate Dashbaord</span>
+        <img class="ld" style="display:none;" src="/static/images/btn-loader.gif" alt=""/>
+      </a>
+      <input type="hidden" name="dashboard_id" class="dashboard_id"/>
+    </div>
+
+  	<div class="panel-body">
+    	<div class="table-wrap text-center">
+        	<table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th class="text-center">&nbsp;</th>
+                  <th class="text-center">Dashboard Name</th>
+                  <th class="text-center">Long Name</th>
+                  <th class="text-center">Version</th>
+                  <th class="text-center">Last Updated By</th>
+                  <th class="text-center">Last Updated Date</th>
+                  <th class="text-center">Active</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr ng-repeat="dash in dashboardData">
+                  <td>
+                  	<div class="custom-radio label-only">
+                        <input type="radio" value="{{dash.pk}}" class="role-u" name="role" id="role1_{{dash.pk}}">
+                        <label for="role1_{{dash.pk}}">&nbsp;</label>
+                    </div>
+                  </td>
+                  <td>
+                  	<a ng-if="update_dashboard!=''" ng-click="editDashboard(dash.pk);" data-toggle="modal" data-target="#EditRole" style="cursor:pointer">{{dash.fields.short_name}}</a>
+                  </td>
+                  <td>{{dash.fields.long_name}}</td>
+                  <td>{{dash.fields.version}}</td>
+                  <td class="updated_by">{{dash.fields.last_updated_by}}</td>
+                  <td class="updated_date">{{dash.fields.last_updated_date|date:"M/d/yyyy h:mm a"}}</td>
+                  <td ng-if="dash.fields.active_flag=='Y'" class="active_stat">Yes</td>
+                  <td ng-if="dash.fields.active_flag=='N'" class="active_stat">No</td>
+                </tr>
+
+              </tbody>
+            </table>
+
+        </div>
+    </div>
+  </div>
+
+
+  <!-- Modal -->
+  <div class="modal fade log-modal" id="EditRole" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form name="roleForm" class="frm form-horizontal" ng-submit="dashboardFormData()" autocomplete="off" enctype="multipart/form-data" novalidate>
+      <div class="modal-header">
+        <button type="button" ng-click="close();" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">{{popup_text}}</h4>
+        <div class="alert alert-success" role="alert" ng-if="status_role=='success'">{{message_role}}</div>
+        <div class="alert alert-danger" role="alert" ng-if="status_role=='danger'">{{message_role}}</div>
+      </div>
+
+      <p ng-if="edit_role.length==0" style="text-align:center;margin-top:10px;"><img class="loader" src="/static/images/loader.gif" alt=""/> &nbsp;&nbsp;Please wait...</p>
+
+      <div ng-if="edit_role.length!=0" class="modal-body">
+          <div class="form-group">
+              <label class="control-label col-lg-2">Dashboard Name</label>
+                <div class="col-lg-4">
+                  <input type="text" name="dashboard_name" ng-model="dashboard_name" ng-minlength="5" class="form-control dashboard_name chk" required>
+                  <span ng-show="roleForm.dashboard_name.$touched && roleForm.dashboard_name.$invalid && !roleForm.dashboard_name.$error.minlength" style="color:#FF001F">This field is required.</span>
+                  <span ng-show="roleForm.dashboard_name.$error.minlength" style="color:#FF001F">Min length must be 5 character</span>
+                </div>
+                <label class="control-label col-lg-1">Version</label>
+                <div class="col-lg-1">
+                  <input name="dashboard_version" ng-model="dashboard_version" type="text" class="form-control dashboard_version" required >
+                  <span ng-show="roleForm.dashboard_version.$touched && roleForm.dashboard_version.$invalid" style="color:#FF001F;white-space:nowrap;">This field is required.</span>
+                </div>
+                <label class="control-label col-lg-1">Active</label>
+                <div class="col-lg-1">
+                  <div class="switch">
+                      <input ng-if="edit_role.fields.active_flag=='Y'" checked="checked" name="dashboard_active" value="Y" id="toggle-active-2" class="cmn-toggle cmn-toggle-round role_active" type="checkbox">
+                      <input ng-if="edit_role.fields.active_flag=='N'" name="dashboard_active" value="Y" id="toggle-active-2" class="cmn-toggle cmn-toggle-round role_active" type="checkbox">
+                      <input ng-if="popup_text=='Add Dashboard'" name="dashboard_active" value="Y" id="toggle-active-2" class="cmn-toggle cmn-toggle-round role_active" type="checkbox">
+
+                      <label for="toggle-active-2"></label>
+                  </div>
+                </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-lg-2">Long Name</label>
+                <div class="col-lg-8">
+                  <input type="text" name="long_name" ng-model="long_name" ng-minlength="5" class="form-control long_name chk" required>
+                  <span ng-show="roleForm.long_name.$touched && roleForm.long_name.$invalid && !roleForm.long_name.$error.minlength" style="color:#FF001F">This field is required.</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-lg-2">Images</label>
+                <div class="col-lg-7">
+                  <div class="row">
+                    <div class="col-lg-11">
+                      <input type="file" name="pic" id="pic" accept=".png,.jpg" class="form-control pic chk">
+                    </div>
+                    <div ng-if="dash_pic!=''" class="prview_imagecustom col-sm-1" style="border: 1px solid #ccc;padding: 2px;float: left;background: rgba(204, 204, 204, 0.56);text-align: center;">
+                      <img src="/static/uploaded/{{dash_pic}}" height="34" style="display:inline-block;"/>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+              <label class="control-label col-lg-2">Help Text</label>
+                <div class="col-lg-8">
+                  <textarea class="form-control help_text chk" name="help_text" ng-model="help_text" ng-minlength="5" rows="3" required ></textarea>
+                  <span ng-show="roleForm.help_text.$touched && roleForm.help_text.$invalid && !roleForm.help_text.$error.minlength" style="color:#FF001F">This field is required.</span>
+                </div>
+            </div>
+            <div class="form-group">
+                  <div class="col-lg-8 col-lg-push-2">
+                      <div class="row">
+                          <div class="col-sm-5">
+                              <label class="control-label ms-label">Assigned Processes</label>
+                                <select name="assign_process" ng-model="assign_process" id="optgroupEdit" class="form-control assign_process chk" size="8" multiple="multiple">
+                                    <option ng-repeat="asign_perm in assigned_process" value="{{asign_perm[0]}}">{{asign_perm[1]}}</option>
+                                </select>
+                            </div>
+
+                            <div class="col-sm-2">
+                                <div class="ms-btn-holder">
+                                  <button type="button" id="optgroupEdit_rightSelected" class="btn btn-block btn-primary"><i class="glyphicon glyphicon-chevron-right"></i></button>
+                                  <button type="button" id="optgroupEdit_leftSelected" class="btn btn-block btn-primary"><i class="glyphicon glyphicon-chevron-left"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-5">
+                              <label class="control-label ms-label">Available	Processes</label>
+                                <select id="optgroupEdit_to" class="form-control" size="8" multiple="multiple">
+                                    <option ng-if="popup_text=='Add Dashboard'" ng-repeat="dp in dataProcess" value="{{dp.id}}">{{dp.short_name}}</option>
+                                    <option ng-if="popup_text=='Edit Dashboard'" ng-repeat="dp in dataProcess" value="{{dp[0]}}">{{dp[1]}}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+
+            <div class="form-group" ng-if="popup_text!='Add Dashboard'">
+              <label class="control-label col-lg-2">Last Updated By</label>
+                <div class="col-lg-3">
+                  <input type="text" value="{{edit_role.fields.last_updated_by}}" readonly class="form-control">
+                </div>
+                <label class="control-label col-lg-2">Last Updated Date</label>
+                <div class="col-lg-3">
+                  <input type="text" value="{{edit_role.fields.last_updated_date|date:'M/d/yyyy h:mm a'}}" readonly class="form-control">
+                </div>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <input type="hidden" name="dashboard_id" value="{{edit_role.pk}}" class="edit_dashboard_id"/>
+        <input type="hidden" name="edit_pic_name" value="{{edit_role.fields.dashboard_image}}" class="edit_pic_name"/>
+        <button type="button" ng-click="close();" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" ng-disabled="roleForm.$invalid"><span class="role_save">Save changes</span>
+          <img class="lder" style="display:none;" src="/static/images/btn-loader.gif" alt=""/>
+        </button>
+      </div>
+      </form>
+    </div>
+  </div>
+  </div>
+
+<script src="/static/js/multiselect.min.js"></script>
+</div>

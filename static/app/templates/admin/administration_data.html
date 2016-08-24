@@ -1,0 +1,210 @@
+<div class="main-container">
+  <!--Loader-->
+  <div ng-if="loading" class="body-loader"></div>
+  <!--// Loader-->
+
+  <div class="header-bottom">
+        <div class="bottom-part clearfix">
+              <div class="nav-toggle"></div>
+              <!-- <div class="data-refresh-info">
+                  <div class="title">Data Last Refreshed</div>
+                  <div class="date-time clearfix">
+                      <span class="pull-left">17 February 2016</span>
+                      <span class="pull-right"><i class="fa fa-clock-o"></i> 9:15 AM</span>
+                  </div>
+              </div> -->
+              <div class="page-title">
+                  <h1>Data <span class="b-divide"><i class="fa fa-angle-double-right"></i></span> Manage Data</h1>
+              </div>
+        </div>
+    </div>
+    <!--/.header-bottom-->
+
+  <div class="alert alert-success" role="alert" ng-if="status=='success'">{{message}}</div>
+  <div class="alert alert-warning" role="alert" ng-if="status=='warning'">{{message}}</div>
+  <div class="alert alert-danger" role="alert" ng-if="status=='danger'">{{message}}</div>
+
+  <div ng-if="upload_data!=''" class="white-panel">
+  	<div class="panel-body">
+      <form name="userForm" class="frm form-horizontal" ng-submit="dataImport()" enctype="multipart/form-data">
+    	<div class="form-group">
+          <label class="control-label col-lg-2">Company Name</label>
+            <div class="col-lg-5">
+              <div class="custom-select">
+              	<select name="comp_name" class="form-control comp_name chk">
+                    <option ng-repeat="comp in compData" value="{{comp.id}}" ng-selected="{{comp.id == UserCompId}}">{{comp.short_name}}</option>
+                </select>
+              </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-lg-2">Data File Location</label>
+          <div class="col-xs-3">
+              <input type="text" readonly class="form-control chk" id="upload-file-info">
+            </div>
+            <div class="col-xs-2">
+              <label class="btn btn-default btn-block" for="my-file-selector">
+                    <input id="my-file-selector" name="file" accept=".xls,.xlsx" type="file" style="display:none;" onchange="$('#upload-file-info').val($(this).val());">
+                    Browse...
+                </label>
+            </div>
+        </div>
+        <div class="form-group">
+              <label class="control-label col-lg-2">Data Type</label>
+              <div class="col-lg-5">
+                <div class="custom-select">
+                  <select name="data_type" data-ng-model="data_type" class="form-control data_type chk">
+                     <option value="">Choose</option>
+                      <option ng-repeat="dt in dataType" value="{{dt.fields.data_type}}">{{dt.fields.data_type}}</option>
+                  </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-lg-2">&nbsp;</label>
+            <div class="col-sm-4 col-lg-1">
+                <button type="reset" class="btn btn-default btn-block cancel-btn">Cancel</button>
+            </div>
+            <div class="col-sm-4 col-lg-2">
+                <input type="submit" value="Upload Data" class="btn btn-success btn-block upload-btn"/>
+                <img class="loader  ldr" style="display:none;" src="/static/images/btn-loader.gif" alt=""/>
+            </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="white-panel">
+  	<h3 class="panel-heading">&nbsp;</h3>
+    <div ng-if="rollback!=''" class="heading-btns">
+        <a href="javascript:void(0);" class="btn btn-success" ng-click="__rollback()"><i class="fa fa-undo"></i> <span class="roll">Rollback Data</span>
+          <img class="loader rollback-loader" style="display:none;" src="/static/images/btn-loader.gif" alt=""/>
+        </a>
+    </div>
+  	<div class="panel-body">
+    	<div class="table-wrap text-center">
+        	<table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th class="text-center">&nbsp;</th>
+                  <th class="text-center">Company Name</th>
+                  <th class="text-center">Data Type</th>
+                  <th class="text-center">Uploaded By</th>
+                  <th class="text-center">Uploaded Date</th>
+                  <th class="text-center"># Records</th>
+                  <th class="text-center">Status</th>
+                  <th class="text-center">Log</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr dir-paginate="log in logData |itemsPerPage:10">
+                  <td>
+                    <div class="custom-radio label-only">
+                        <input ng-if="log.fields.upload_or_rollback=='Upload to Rollback'" type="radio" name="company" class="datauplid" datype="{{log.fields.data_type}}" value="{{log.fields.data_upload_id}}" id="{{log.fields.data_upload_id}}">
+                        <label for="{{log.fields.data_upload_id}}">&nbsp;</label>
+                    </div>
+                  </td>
+                  <td>{{log.fields.company_name}}</td>
+                  <td>{{log.fields.data_type}}</td>
+                  <td>{{log.fields.uploaded_by}}</td>
+                  <td>{{log.fields.uploaded_date|date:"M/d/yyyy h:mm a"}}</td>
+                  <td class="no_records">{{log.fields.no_of_records|number}}</td>
+                  <td class="status">{{log.fields.status}}</td>
+                  <td><a ng-click="get_log_data(log.fields.data_upload_id);" data-toggle="modal" data-target="#ListView1" style="cursor:pointer"><i class="fa fa-file-text-o"></i></a></td>
+                </tr>
+                <input type="hidden" value="" class="data_upload_id"/>
+                <input type="hidden" value="" class="data_upload_type"/>
+              </tbody>
+            </table>
+
+            <dir-pagination-controls max-size="5" direction-links="true" boundary-links="true" > </dir-pagination-controls>
+
+        </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+<!--Modal-->
+<div class="modal fade log-modal" id="ListView1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Log Details</h4>
+      </div>
+      <div class="table-wrap text-center">
+          		<table id="my-table" class="table table-striped table-bordered">
+                  <thead>
+                    <tr>
+                      <th class="text-center">Company Name</th>
+                      <th class="text-center">Event Date</th>
+                      <th class="text-center">Event Category</th>
+                      <th class="text-center">Event Sub Category</th>
+                      <th class="text-center">Event Type</th>
+                      <th class="text-left">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr  ng-repeat="dtlg in log_details">
+                      <td class="text-center">{{dtlg.fields.company_name}}</td>
+                      <td class="text-center">{{dtlg.fields.event_date}}</td>
+                      <td class="text-center">{{dtlg.fields.event_category}}</td>
+                      <td class="text-center">{{dtlg.fields.event_sub_category}}</td>
+                      <td class="text-center">{{dtlg.fields.event_type}}</td>
+                      <td class="text-left">{{dtlg.fields.description}}</td>
+                    </tr>
+              		</tbody>
+
+                  <tr ng-if="log_details.length==0"><td colspan="6" class="log-no"><img class="loader" src="/static/images/loader.gif" alt=""/> &nbsp;&nbsp;Loading...</td></tr>
+              </table>
+      </div>
+    </div>
+  </div>
+</div>
+<!--// Modal-->
+
+
+
+<script type="text/javascript">
+    $(function () {
+      $(document).on('submit', '.frm', function(){
+        var ret=true;
+          $(this).find('.chk').each(function(){
+            if ($(this).val()=='') {
+              $(this).addClass('err');
+              ret=false;
+            }else{
+              $(this).removeClass('err');
+            }
+          });
+
+          if(ret==true){
+            jQuery('.ldr').show();
+            jQuery('.upload-btn').val('Please wait...');
+          }
+        return ret;
+      });
+
+      $(document).on('change','#my-file-selector',function(event){
+        var type = $(this).val().split(".");
+        ext=type.pop();
+        if(ext!='xls' && ext!='xlsx'){
+          $(this).val('');
+          $('#upload-file-info').val('');
+          $('#upload-file-info').addClass('err');
+          alert('Please choose valid file.');
+        }else{
+          $('#upload-file-info').removeClass('err');
+        }
+      });
+
+      $(document).on('click', '.datauplid', function(){
+          $('.data_upload_id').val($(this).val());
+          $('.data_upload_type').val($(this).attr('datype'));
+      });
+
+    });
+</script>

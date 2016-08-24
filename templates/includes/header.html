@@ -28,6 +28,7 @@
 
 {% endfor %} -->
 
+
 <div class="left-panel">
   <div class="close-leftmenu"></div>
   <div class="nav-tools">
@@ -42,30 +43,90 @@
     <ul id="accordion">
       {% for key, values in leftPanel.items %}
       <li class="panel"> <a data-toggle="collapse" data-parent="#accordion" href="javascript:void(0);" data-target="#MenuOne_{{ forloop.counter }}" class="toggle-nav">
-      <span class="menu-icon"><img src="http://115.248.73.172:8000/static/images/menu-icon-01.png" alt=""></span> <span>{{key}}</span></a>
+      <span class="menu-icon"><img src="/static/images/menu-icon-01.png" alt=""></span> <span>{{key}}</span></a>
         <div id="MenuOne_{{ forloop.counter }}" class="collapse sub-collapse">
           <div class="menu-sub-left">
             <ul class="sub-left">
               {% for v in values %}
               {% with v.dashboardName.lower as link %}
-              <li><a href="/#/{{key.lower}}/{{link.split|join:"-"}}/" vid="{{v.dashboardId}}"><i class="fa fa-clock-o"></i>{{v.dashboardName}}</a></li>
+              <li><a href="/#/{{link.split|join:"-"}}/" vid="{{v.dashboardId}}"><i class="fa fa-clock-o"></i>{{v.dashboardName}}</a></li>
               {% endwith %}
               {% endfor %}
+
             </ul>
           </div>
         </div>
       </li>
       {% endfor %}
+
+
+      {% if 'View Administration' in rolePermission %}
+      <li class="panel"> <a data-toggle="collapse" data-parent="#accordion" href="javascript:void(0);" data-target="#MenuOne_{{ forloop.counter }}" class="toggle-nav">
+      <span class="menu-icon"><img src="/static/images/menu-icon-02.png" alt=""></span> <span>Administration</span></a>
+        <div id="MenuOne_{{ forloop.counter }}" class="collapse sub-collapse">
+          <div class="menu-sub-left">
+            <ul class="sub-left">
+
+              {% if 'View Role' in rolePermission %}
+              <li><a href="/#/administration/role/" vid=""><i class="fa fa-clock-o"></i>Role</a></li>
+              {% endif %}
+
+              {% if 'View Dashboard' in rolePermission %}
+              <li><a href="/#/administration/dashboard/" vid=""><i class="fa fa-clock-o"></i>Dashboard</a></li>
+              {% endif %}
+
+              {% if 'View Process' in rolePermission %}
+              <li><a href="/#/administration/process/" vid=""><i class="fa fa-clock-o"></i>Process</a></li>
+              {% endif %}
+
+              {% if 'View Company' in rolePermission %}
+              <li><a href="/#/administration/company/" vid=""><i class="fa fa-clock-o"></i>Company</a></li>
+              {% endif %}
+
+              {% if 'View Message' in rolePermission %}
+              <li><a href="/#/administration/message/" vid=""><i class="fa fa-clock-o"></i>Message</a></li>
+              {% endif %}
+
+              {% if 'View User' in rolePermission %}
+              <li><a href="/#/administration/user/" vid=""><i class="fa fa-clock-o"></i>User</a></li>
+              {% endif %}
+
+              {% if 'View Data' in rolePermission %}
+              <li><a href="/#/administration/data/" vid=""><i class="fa fa-clock-o"></i>Data</a></li>
+              {% endif %}
+
+              {% if 'Search Audit Log' in rolePermission %}
+              <li><a href="/#/administration/audit-log/" vid=""><i class="fa fa-clock-o"></i>Audit Log</a></li>
+              {% endif %}
+
+            </ul>
+          </div>
+        </div>
+      </li>
+      {% endif %}
+
     </ul>
   </div>
 </div>
 
 <script type="text/javascript">
 $(function(){
+  if(window.location.hash=='#/'){
+    $('ul.sub-left li:first a').trigger('click');
+  }
+
   len=$('ul.sub-left li').length;
   if(len=='1'){
     $('ul.sub-left li:first a').trigger('click');
   }
+  $('.fa-home').click(function(){
+      $('ul.sub-left li:first a').trigger('click');
+  });
+  $('.fa-refresh').click(function(){
+    lnk=window.location.href.split('#');
+    pp=lnk.pop().slice(1);
+    window.location.href='#'+pp;
+  });
 });
 </script>
 
